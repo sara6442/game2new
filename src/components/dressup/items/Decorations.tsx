@@ -8,7 +8,7 @@
 
 export interface DecorationProps {
   color?: string
-  trim?: string
+  align?: { x: number; y: number; scale: number }
 }
 
 export interface DecorationItem {
