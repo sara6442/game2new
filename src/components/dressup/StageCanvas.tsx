@@ -82,29 +82,29 @@ export function StageCanvas({ selection, colors, alignOverride }: StageCanvasPro
         {/* z=2: BODY */}
         <Body />
 
-        {/* z=3: BOTTOM — only if no dress */}
-        {!selection.dress && BottomComp && <BottomComp color={colors.bottom} />}
-
-        {/* z=4: TOP — only if no dress */}
-        {!selection.dress && TopComp && <TopComp color={colors.top} />}
-
-        {/* z=5: DRESS (replaces top + bottom) — with align override if active */}
+        {/* z=3: BOTTOM — only if no dress — with align override */}
+        {!selection.dress && BottomComp && wrapAlign('bottom', <BottomComp color={colors.bottom} />)}
+        
+        {/* z=4: TOP — only if no dress — with align override */}
+        {!selection.dress && TopComp && wrapAlign('top', <TopComp color={colors.top} />)}
+        
+        {/* z=5: DRESS (replaces top + bottom) — with align override */}
         {selection.dress && DressComp && wrapAlign('dress', <DressComp color={colors.dress} />)}
-
-        {/* z=5.5: COAT */}
-        {CoatComp && <CoatComp color={colors.coat} />}
-
-        {/* z=6: HAIR FRONT — with align override if active */}
+        
+        {/* z=5.5: COAT — with align override */}
+        {CoatComp && wrapAlign('coat', <CoatComp color={colors.coat} />)}
+        
+        {/* z=6: HAIR FRONT — with align override */}
         {HairStyle && wrapAlign('hair', <HairStyle.front color={colors.hair} />)}
-
-        {/* z=7: ACCESSORY */}
-        {AccessoryComp && <AccessoryComp color={colors.accessory} />}
-
-        {/* z=8: SHOE */}
-        {ShoeComp && <ShoeComp color={colors.shoe} />}
-
-        {/* z=9: DECORATION */}
-        {DecorationComp && <DecorationComp />}
+        
+        {/* z=7: ACCESSORY — with align override */}
+        {AccessoryComp && wrapAlign('accessory', <AccessoryComp color={colors.accessory} />)}
+        
+        {/* z=8: SHOE — with align override */}
+        {ShoeComp && wrapAlign('shoe', <ShoeComp color={colors.shoe} />)}
+        
+        {/* z=9: DECORATION — with align override */}
+        {DecorationComp && wrapAlign('decoration', <DecorationComp />)}
       </g>
     </svg>
   )
