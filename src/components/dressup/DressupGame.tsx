@@ -83,6 +83,7 @@ export function DressupGame() {
             <StageCanvas
               selection={game.selection}
               colors={game.colors}
+              alignments={alignments}
               alignOverride={alignOverride}
             />
             {/* Align mode indicator overlay */}
