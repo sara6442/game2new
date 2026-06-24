@@ -16,7 +16,7 @@
 
 export interface ClothProps {
   color?: string
-  trim?: string
+  align?: { x: number; y: number; scale: number }
 }
 
 interface DressAlignment {
@@ -28,9 +28,9 @@ interface DressAlignment {
 /* ------------------------------------------------------------------ */
 /* Helper: render a PNG dress with alignment transform                 */
 /* ------------------------------------------------------------------ */
-function makePngDress(src: string, align: DressAlignment): React.FC<ClothProps> {
-  const { x, y, scale } = align
-  return function PngDress() {
+function makePngDress(src: string): React.FC<ClothProps> {
+  return function PngDress({ align }: ClothProps) {
+    const { x = 0, y = 0, scale = 1 } = align ?? {}
     return (
       <g transform={`translate(${x}, ${y}) scale(${scale})`}>
         <image
@@ -45,7 +45,6 @@ function makePngDress(src: string, align: DressAlignment): React.FC<ClothProps> 
     )
   }
 }
-
 /* ------------------------------------------------------------------ */
 /* Dresses — with user-adjusted alignment values                      */
 /* ------------------------------------------------------------------ */
