@@ -8,18 +8,23 @@ export interface ClothProps {
   align?: { x: number; y: number; scale: number }
 }
 
-function makePngTop(src: string): React.FC<ClothProps> {
-  return function PngTop() {
+interface TopAlignment { x: number; y: number; scale: number }
+
+function makePngTop(src: string, defaultAlign: TopAlignment = { x: 0, y: 0, scale: 1 }): React.FC<ClothProps> {
+  return function PngTop({ align }: ClothProps) {
+    const { x, y, scale } = align ?? defaultAlign
     return (
-      <image
-        href={src}
-        x={0}
-        y={0}
-        width={325}
-        height={742}
-        preserveAspectRatio="xMidYMid meet"
-        onError={(e) => console.error(`Failed to load: ${src}`, e)}
-      />
+      <g transform={`translate(${x}, ${y}) scale(${scale})`}>
+        <image
+          href={src}
+          x={0}
+          y={0}
+          width={325}
+          height={742}
+          preserveAspectRatio="xMidYMid meet"
+          onError={(e) => console.error(`Failed to load: ${src}`, e)}
+        />
+      </g>
     )
   }
 }
@@ -32,17 +37,19 @@ export const Top5: React.FC<ClothProps> = makePngTop('/top5.png')
 export const Top6: React.FC<ClothProps> = makePngTop('/top6.png')
 export const Top7: React.FC<ClothProps> = makePngTop('/top7.png')
 export const Top9: React.FC<ClothProps> = makePngTop('/top9.png')
-export const Top10: React.FC<ClothProps> = makePngTop('/top10.png')
-export const Top11: React.FC<ClothProps> = makePngTop('/top11.png')
-export const Top12: React.FC<ClothProps> = makePngTop('/top12.png') 
-export const Top13: React.FC<ClothProps> = makePngTop('/top13.png')
-export const Top14: React.FC<ClothProps> = makePngTop('/top14.png')
-export const Top15: React.FC<ClothProps> = makePngTop('/top15.png')
-export const Top16: React.FC<ClothProps> = makePngTop('/top16.png')
-export const Top17: React.FC<ClothProps> = makePngTop('/top17.png')
-export const Top18: React.FC<ClothProps> = makePngTop('/top18.png')
-export const Top19: React.FC<ClothProps> = makePngTop('/top19.png')
-export const Top20: React.FC<ClothProps> = makePngTop('/top20.png')
+
+// Tops with custom alignment
+export const Top10: React.FC<ClothProps> = makePngTop('/top10.png', { x: -45, y: 8, scale: 1.25 })
+export const Top11: React.FC<ClothProps> = makePngTop('/top11.png', { x: 21, y: 30, scale: 0.86 })
+export const Top12: React.FC<ClothProps> = makePngTop('/top12.png', { x: -5, y: 12, scale: 1.06 })
+export const Top13: React.FC<ClothProps> = makePngTop('/top13.png', { x: 24, y: 50, scale: 0.85 })
+export const Top14: React.FC<ClothProps> = makePngTop('/top14.png', { x: 29, y: 37, scale: 0.83 })
+export const Top15: React.FC<ClothProps> = makePngTop('/top15.png', { x: 31, y: 52, scale: 0.8 })
+export const Top16: React.FC<ClothProps> = makePngTop('/top16.png', { x: 0, y: 36, scale: 1 })
+export const Top17: React.FC<ClothProps> = makePngTop('/top17.png', { x: 28, y: 59, scale: 0.81 })
+export const Top18: React.FC<ClothProps> = makePngTop('/top18.png', { x: 40, y: 59, scale: 0.75 })
+export const Top19: React.FC<ClothProps> = makePngTop('/top19.png', { x: 34, y: 59, scale: 0.79 })
+export const Top20: React.FC<ClothProps> = makePngTop('/top20.png', { x: 25, y: 32, scale: 0.84 })
 
 export interface TopItem {
   id: string
