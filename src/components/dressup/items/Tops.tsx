@@ -18,6 +18,7 @@ function makePngTop(src: string): React.FC<ClothProps> {
         width={325}
         height={742}
         preserveAspectRatio="xMidYMid meet"
+        onError={(e) => console.error(`Failed to load: ${src}`, e)}
       />
     )
   }
