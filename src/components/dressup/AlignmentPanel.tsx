@@ -2,14 +2,20 @@
 
 import { useEffect } from 'react'
 
-interface AlignmentPanelProps {
-  selectedId: string | null
-  offset: { x: number; y: number }
-  onNudge: (dx: number, dy: number) => void
+interface Offset {
+  x: number
+  y: number
+  scale: number
 }
 
-export default function AlignmentPanel({ selectedId, offset, onNudge }: AlignmentPanelProps) {
-  // Arrow-key listener
+interface AlignmentPanelProps {
+  selectedId: string | null
+  offset: Offset
+  onNudge: (dx: number, dy: number) => void
+  onScaleChange: (scale: number) => void
+}
+
+export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleChange }: AlignmentPanelProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (!selectedId) return
@@ -25,65 +31,65 @@ export default function AlignmentPanel({ selectedId, offset, onNudge }: Alignmen
 
   const copyValues = () => {
     if (!selectedId) return
-    const text = `// ${selectedId}: offset={{ x: ${offset.x}, y: ${offset.y} }}`
+    const text = `// ${selectedId}: { x: ${offset.x}, y: ${offset.y}, scale: ${offset.scale} }`
     navigator.clipboard.writeText(text)
   }
 
   if (!selectedId) {
-    return (
-      <div className="p-3 text-sm text-gray-400 italic">
-        Select an item to align it.
-      </div>
-    )
+    return <div className="p-3 text-sm text-gray-400 italic">Select an item to align it.</div>
   }
 
   return (
     <div className="p-3 space-y-3">
-      {/* Current values */}
-      <div className="text-xs font-mono bg-gray-100 rounded p-2">
-        <span className="font-semibold">{selectedId}</span>
-        <br />
-        x: <span className="text-blue-600">{offset.x}</span>
-        &nbsp;&nbsp;
-        y: <span className="text-blue-600">{offset.y}</span>
+      {/* Live values display */}
+      <div className="text-xs font-mono bg-gray-100 rounded p-2 leading-5">
+        <div className="font-semibold truncate">{selectedId}</div>
+        <div>x: <span className="text-blue-600">{offset.x}</span> &nbsp; y: <span className="text-blue-600">{offset.y}</span></div>
+        <div>scale: <span className="text-purple-600">{offset.scale.toFixed(2)}</span></div>
       </div>
 
       {/* Arrow buttons */}
-      <div className="grid grid-cols-3 gap-1 w-28 mx-auto">
+      <div className="grid grid-cols-3 gap-1 w-28 mx-auto text-center">
         <div />
-        <button
-          onClick={() => onNudge(0, -1)}
-          className="flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-lg h-8 w-8"
-          title="Up (↑)"
-        >↑</button>
+        <button onClick={() => onNudge(0, -1)} className="bg-gray-200 hover:bg-gray-300 rounded h-8 w-8 text-base">↑</button>
         <div />
-
-        <button
-          onClick={() => onNudge(-1, 0)}
-          className="flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-lg h-8 w-8"
-          title="Left (←)"
-        >←</button>
-        <div className="flex items-center justify-center text-xs text-gray-400">nudge</div>
-        <button
-          onClick={() => onNudge(1, 0)}
-          className="flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-lg h-8 w-8"
-          title="Right (→)"
-        >→</button>
-
+        <button onClick={() => onNudge(-1, 0)} className="bg-gray-200 hover:bg-gray-300 rounded h-8 w-8 text-base">←</button>
+        <div className="flex items-center justify-center text-xs text-gray-400">move</div>
+        <button onClick={() => onNudge(1, 0)}  className="bg-gray-200 hover:bg-gray-300 rounded h-8 w-8 text-base">→</button>
         <div />
-        <button
-          onClick={() => onNudge(0, 1)}
-          className="flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded text-lg h-8 w-8"
-          title="Down (↓)"
-        >↓</button>
+        <button onClick={() => onNudge(0, 1)}  className="bg-gray-200 hover:bg-gray-300 rounded h-8 w-8 text-base">↓</button>
         <div />
       </div>
-
       <p className="text-xs text-gray-400 text-center">
-        Hold <kbd className="bg-gray-200 px-1 rounded">Shift</kbd> + arrow key = ×10
+        Hold <kbd className="bg-gray-200 px-1 rounded">Shift</kbd> for ×10 steps
       </p>
 
-      {/* Copy button */}
+      {/* Scale input */}
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-gray-600">Scale</label>
+        <input
+          type="number"
+          step="0.01"
+          min="0.1"
+          max="3"
+          value={offset.scale}
+          onChange={(e) => onScaleChange(parseFloat(e.target.value) || 1)}
+          className="w-full border border-gray-300 rounded px-2 py-1 text-sm font-mono"
+        />
+        {/* Quick presets */}
+        <div className="flex gap-1 flex-wrap">
+          {[0.5, 0.75, 1, 1.25, 1.5].map(s => (
+            <button
+              key={s}
+              onClick={() => onScaleChange(s)}
+              className={`text-xs px-1.5 py-0.5 rounded border ${
+                offset.scale === s ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white border-gray-300 hover:bg-gray-100'
+              }`}
+            >{s}×</button>
+          ))}
+        </div>
+      </div>
+
       <button
         onClick={copyValues}
         className="w-full text-sm bg-indigo-500 hover:bg-indigo-600 text-white rounded py-1.5"
