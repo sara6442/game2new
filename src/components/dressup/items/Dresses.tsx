@@ -21,7 +21,7 @@ function makePngDress(src: string, defaultAlign: DressAlignment = { x: 0, y: 0, 
 
 export const Dress1: React.FC<ClothProps> = makePngDress('/dress1.png', { x: 31, y: 54, scale: 0.8 })
 export const Dress2: React.FC<ClothProps> = makePngDress('/dress2.png', { x: -22, y: -41, scale: 1.10 })
-export const Dress3: React.FC<ClothProps> = makePngDress('/dress3.png', { x: -36, y: -198, scale: 1.2 })
+export const Dress3: React.FC<ClothProps> = makePngDress('/dress3.png', { x: -6, y: 212, scale: 1.05 })
 export const Dress4: React.FC<ClothProps> = makePngDress('/dress4.png', { x: -133, y: -334, scale: 1.74 })
 export const Dress5: React.FC<ClothProps> = makePngDress('/dress5.png', { x: 8, y: 4, scale: 0.95 })
 export const Dress6: React.FC<ClothProps> = makePngDress('/dress6.png', { x: -41, y: -147, scale: 1.25 })
