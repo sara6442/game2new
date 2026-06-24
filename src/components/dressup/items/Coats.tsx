@@ -21,9 +21,9 @@
  * matching the body's coordinate system.
  */
 
-export interface CoatProps {
+export interface ClothProps {
   color?: string
-  trim?: string
+  align?: { x: number; y: number; scale: number }
 }
 
 export interface CoatItem {
