@@ -36,11 +36,11 @@ interface StageCanvasProps {
     decoration: string | null
   }
   colors: Record<CategoryId, string>
-  /** Manual alignment override for the currently-selected item (in align mode) */
+  alignments: Record<string, AlignmentValues>
   alignOverride?: { category: CategoryId; values: AlignmentValues } | null
 }
 
-export function StageCanvas({ selection, colors, alignOverride }: StageCanvasProps) {
+export function StageCanvas({ selection, colors, alignments, alignOverride }: StageCanvasProps) {
   const BackgroundComp = BACKGROUND_ITEMS.find((b) => b.id === selection.background)?.Component
   const HairStyle = HAIR_STYLES.find((h) => h.id === selection.hair)
   const TopComp = TOP_ITEMS.find((t) => t.id === selection.top)?.Component
@@ -52,17 +52,19 @@ export function StageCanvas({ selection, colors, alignOverride }: StageCanvasPro
   const DecorationComp = DECORATION_ITEMS.find((d) => d.id === selection.decoration)?.Component
 
   // Helper: wrap a component in an alignment transform if it's the active aligned item
-  const wrapAlign = (category: CategoryId, element: React.ReactElement): React.ReactElement => {
-    if (alignOverride && alignOverride.category === category) {
-      const { x, y, scale } = alignOverride.values
-      return (
-        <g transform={`translate(${x}, ${y}) scale(${scale})`}>
-          {element}
-        </g>
-      )
-    }
-    return element
+const wrapAlign = (category: CategoryId, itemId: string | null, element: React.ReactElement): React.ReactElement => {
+  // In align mode, the override takes priority (live nudging)
+  if (alignOverride && alignOverride.category === category) {
+    const { x, y, scale } = alignOverride.values
+    return <g transform={`translate(${x}, ${y}) scale(${scale})`}>{element}</g>
   }
+  // Otherwise use the saved alignment for this item
+  if (itemId && alignments[itemId]) {
+    const { x, y, scale } = alignments[itemId]
+    return <g transform={`translate(${x}, ${y}) scale(${scale})`}>{element}</g>
+  }
+  return element
+}
 
   return (
     <svg
@@ -82,29 +84,29 @@ export function StageCanvas({ selection, colors, alignOverride }: StageCanvasPro
         {/* z=2: BODY */}
         <Body />
 
-        {/* z=3: BOTTOM — only if no dress — with align override */}
-        {!selection.dress && BottomComp && wrapAlign('bottom', <BottomComp color={colors.bottom} />)}
-        
-        {/* z=4: TOP — only if no dress — with align override */}
-        {!selection.dress && TopComp && wrapAlign('top', <TopComp color={colors.top} />)}
-        
-        {/* z=5: DRESS (replaces top + bottom) — with align override */}
-        {selection.dress && DressComp && wrapAlign('dress', <DressComp color={colors.dress} />)}
-        
-        {/* z=5.5: COAT — with align override */}
-        {CoatComp && wrapAlign('coat', <CoatComp color={colors.coat} />)}
-        
-        {/* z=6: HAIR FRONT — with align override */}
-        {HairStyle && wrapAlign('hair', <HairStyle.front color={colors.hair} />)}
-        
-        {/* z=7: ACCESSORY — with align override */}
-        {AccessoryComp && wrapAlign('accessory', <AccessoryComp color={colors.accessory} />)}
-        
-        {/* z=8: SHOE — with align override */}
-        {ShoeComp && wrapAlign('shoe', <ShoeComp color={colors.shoe} />)}
-        
-        {/* z=9: DECORATION — with align override */}
-        {DecorationComp && wrapAlign('decoration', <DecorationComp />)}
+       {/* z=3: BOTTOM */}
+      {!selection.dress && BottomComp && wrapAlign('bottom', selection.bottom, <BottomComp color={colors.bottom} />)}
+      
+      {/* z=4: TOP */}
+      {!selection.dress && TopComp && wrapAlign('top', selection.top, <TopComp color={colors.top} />)}
+      
+      {/* z=5: DRESS */}
+      {selection.dress && DressComp && wrapAlign('dress', selection.dress, <DressComp color={colors.dress} />)}
+      
+      {/* z=5.5: COAT */}
+      {CoatComp && wrapAlign('coat', selection.coat, <CoatComp color={colors.coat} />)}
+      
+      {/* z=6: HAIR FRONT */}
+      {HairStyle && wrapAlign('hair', selection.hair, <HairStyle.front color={colors.hair} />)}
+      
+      {/* z=7: ACCESSORY */}
+      {AccessoryComp && wrapAlign('accessory', selection.accessory, <AccessoryComp color={colors.accessory} />)}
+      
+      {/* z=8: SHOE */}
+      {ShoeComp && wrapAlign('shoe', selection.shoe, <ShoeComp color={colors.shoe} />)}
+      
+      {/* z=9: DECORATION */}
+      {DecorationComp && wrapAlign('decoration', selection.decoration, <DecorationComp />)}
       </g>
     </svg>
   )
