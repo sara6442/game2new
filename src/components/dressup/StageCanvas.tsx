@@ -97,8 +97,13 @@ const wrapAlign = (category: CategoryId, itemId: string | null, element: React.R
       {CoatComp && wrapAlign('coat', selection.coat, <CoatComp color={colors.coat} />)}
       
       {/* z=6: HAIR FRONT */}
-      {HairStyle && wrapAlign('hair', selection.hair, <HairStyle.front color={colors.hair} />)}
-      
+      {HairStyle && (() => {
+        const hairAlign = alignOverride?.category === 'hair'
+          ? alignOverride.values
+          : (selection.hair && alignments[selection.hair]) || undefined
+        return <HairStyle.front color={colors.hair} align={hairAlign} />
+      })()}      
+        
       {/* z=7: ACCESSORY */}
       {AccessoryComp && wrapAlign('accessory', selection.accessory, <AccessoryComp color={colors.accessory} />)}
       
