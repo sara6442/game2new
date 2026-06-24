@@ -36,6 +36,35 @@ function makePngTop(src: string): React.FC<ClothProps> {
 }
 
 /* ------------------------------------------------------------------ */
+/* Helper: render a PNG clothing item WITH alignment support          */
+/* ------------------------------------------------------------------ */
+interface TopAlignment {
+  x: number
+  y: number
+  scale: number
+}
+
+function makePngTopAligned(src: string, align: TopAlignment): React.FC<ClothProps> {
+  const { x, y, scale } = align
+  return function PngTopAligned() {
+    return (
+      <g transform={`translate(${x}, ${y}) scale(${scale})`}>
+        <image href={src} x={0} y={0} width={325} height={742} preserveAspectRatio="xMidYMid meet" />
+      </g>
+    )
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* New Tops 8-10 — with default alignment values                      */
+/* These values come from the Align Mode tool after tuning            */
+/* ------------------------------------------------------------------ */
+
+export const Top8  = makePngTopAligned('/top8.png',  { x: 0, y: 0, scale: 1.00 })
+export const Top9  = makePngTopAligned('/top9.png',  { x: -5, y: -10, scale: 1.05 })
+export const Top10 = makePngTopAligned('/top10.png', { x: 3, y: -20, scale: 0.98 })
+
+/* ------------------------------------------------------------------ */
 /* Tops 1–7 — User's uploaded tops (top8 removed)                     */
 /* Sleeve lengths (from vision analysis):                              */
 /*   top1: long (poncho), top2: long (cape), top3: short,             */
@@ -67,6 +96,10 @@ export const TOP_ITEMS: TopItem[] = [
   { id: 'top5', name: 'Floral Top',       Component: Top5, sleeveLength: 'short' },
   { id: 'top6', name: 'Ruffled Blouse',   Component: Top6, sleeveLength: 'long' },
   { id: 'top7', name: 'Blue Checkered',   Component: Top7, sleeveLength: 'short' },
+  // NEW TOPS:
+  { id: 'top8',  name: 'Red Sweater',     Component: Top8,  sleeveLength: 'long' },
+  { id: 'top9',  name: 'Silk Tank',       Component: Top9,  sleeveLength: 'short' },
+  { id: 'top10', name: 'Denim Jacket',    Component: Top10, sleeveLength: 'long' },
 ]
 
 export default TOP_ITEMS
