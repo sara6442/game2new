@@ -32,7 +32,7 @@ function makePngBottom(src: string, defaultY = 0): React.FC<ClothProps> {
 }
 
 /* ------------------------------------------------------------------ */
-/* Bottoms 1–7                                                        */
+/* Bottoms 1–21                                                        */
 /* ------------------------------------------------------------------ */
 export const Bottom1: React.FC<ClothProps> = makePngBottom('/bottom1.png')
 export const Bottom2: React.FC<ClothProps> = makePngBottom('/bottom2.png')
@@ -40,7 +40,21 @@ export const Bottom3: React.FC<ClothProps> = makePngBottom('/bottom3.png')
 export const Bottom4: React.FC<ClothProps> = makePngBottom('/bottom4.png')
 export const Bottom5: React.FC<ClothProps> = makePngBottom('/bottom5.png')
 export const Bottom6: React.FC<ClothProps> = makePngBottom('/bottom6.png')
-export const Bottom7: React.FC<ClothProps> = makePngBottom('/bottom7.png', -29)  // brown pleated — shift up to align waist
+export const Bottom7: React.FC<ClothProps> = makePngBottom('/bottom7.png', -29)
+export const Bottom8: React.FC<ClothProps> = makePngBottom('/bottom8.png')
+export const Bottom9: React.FC<ClothProps> = makePngBottom('/bottom9.png')
+export const Bottom10: React.FC<ClothProps> = makePngBottom('/bottom10.png')
+export const Bottom11: React.FC<ClothProps> = makePngBottom('/bottom11.png')
+export const Bottom12: React.FC<ClothProps> = makePngBottom('/bottom12.png')
+export const Bottom13: React.FC<ClothProps> = makePngBottom('/bottom13.png')
+export const Bottom14: React.FC<ClothProps> = makePngBottom('/bottom14.png')
+export const Bottom15: React.FC<ClothProps> = makePngBottom('/bottom15.png')
+export const Bottom16: React.FC<ClothProps> = makePngBottom('/bottom16.png')
+export const Bottom17: React.FC<ClothProps> = makePngBottom('/bottom17.png')
+export const Bottom18: React.FC<ClothProps> = makePngBottom('/bottom18.png')
+export const Bottom19: React.FC<ClothProps> = makePngBottom('/bottom19.png')
+export const Bottom20: React.FC<ClothProps> = makePngBottom('/bottom20.png')
+export const Bottom21: React.FC<ClothProps> = makePngBottom('/bottom21.png')
 
 /* ------------------------------------------------------------------ */
 /* Registry                                                          */
@@ -59,6 +73,20 @@ export const BOTTOM_ITEMS: BottomItem[] = [
   { id: 'bottom5', name: 'Light Blue',      Component: Bottom5 },
   { id: 'bottom6', name: 'Beige Buttoned',  Component: Bottom6 },
   { id: 'bottom7', name: 'Brown Pleated',   Component: Bottom7 },
+  { id: 'bottom8', name: 'Black Plaid',     Component: Bottom8 },
+  { id: 'bottom9', name: 'Maroon Pleated',  Component: Bottom9 },
+  { id: 'bottom10', name: 'Pink Ruffled',    Component: Bottom10 },
+  { id: 'bottom11', name: 'Blue Striped',    Component: Bottom11 },
+  { id: 'bottom12', name: 'Light Blue',      Component: Bottom12 },
+  { id: 'bottom13', name: 'Beige Buttoned',  Component: Bottom13 },
+  { id: 'bottom14', name: 'Brown Pleated',   Component: Bottom14 },
+  { id: 'bottom15', name: 'Black Plaid',     Component: Bottom15 },
+  { id: 'bottom16', name: 'Maroon Pleated',  Component: Bottom16 },
+  { id: 'bottom17', name: 'Pink Ruffled',    Component: Bottom17 },
+  { id: 'bottom18', name: 'Blue Striped',    Component: Bottom18 },
+  { id: 'bottom19', name: 'Light Blue',      Component: Bottom19 },
+  { id: 'bottom20', name: 'Beige Buttoned',  Component: Bottom20 },
+  { id: 'bottom21', name: 'Brown Pleated',   Component: Bottom21 },
 ]
 
 export default BOTTOM_ITEMS
