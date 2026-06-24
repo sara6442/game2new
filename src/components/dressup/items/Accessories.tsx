@@ -1,16 +1,4 @@
-'use client'
-
-/**
- * Accessories.tsx — Hats, glasses, necklaces, etc.
- *
- * Currently EMPTY. Upload your accessory PNG/SVG files and add
- * them to the ACCESSORY_ITEMS array below to populate this category.
- *
- * Drawn on the TOP layer (z=7), above hair, body, and clothes.
- * Each accessory is positioned to fit the body's head/neck/shoulders.
- */
-
-export interface ClothProps {
+export interface AccessoryProps {
   color?: string
   align?: { x: number; y: number; scale: number }
 }
@@ -21,6 +9,16 @@ export interface AccessoryItem {
   Component: React.FC<AccessoryProps>
 }
 
-export const ACCESSORY_ITEMS: AccessoryItem[] = []
+function makePngAccessory(src: string): React.FC<AccessoryProps> {
+  return function PngAccessory({ align }: AccessoryProps) {
+    const { x = 0, y = 0, scale = 1 } = align ?? {}
+    return (
+      <g transform={`translate(${x}, ${y}) scale(${scale})`}>
+        <image href={src} x={0} y={0} width={325} height={742} preserveAspectRatio="xMidYMid meet" />
+      </g>
+    )
+  }
+}
 
+export const ACCESSORY_ITEMS: AccessoryItem[] = []
 export default ACCESSORY_ITEMS
