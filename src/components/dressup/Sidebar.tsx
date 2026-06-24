@@ -22,7 +22,8 @@
 import { CATEGORIES, ITEMS_BY_CATEGORY, type CategoryId } from '@/lib/dressup/items'
 import { CANVAS_VIEWBOX, BODY_TRANSFORM } from '@/lib/dressup/canvas-dimensions'
 import { Body } from './items/Body'
-import { AlignmentPanel, type AlignmentValues } from './AlignmentPanel'
+import AlignmentPanel from './AlignmentPanel'
+import type { AlignmentValues } from '@/lib/dressup/useDressup'
 import { cn } from '@/lib/utils'
 
 interface SidebarProps {
@@ -93,14 +94,17 @@ export function Sidebar({
 
       {/* ====== ALIGNMENT PANEL (only shown in align mode) ====== */}
       {alignMode && (
-        <AlignmentPanel
-          activeCategory={activeCategory}
-          selectedItemId={selectedItemId}
-          values={currentAlignment}
-          onValuesChange={onAlignmentChange}
-          onReset={onAlignmentReset}
-        />
-      )}
+          <AlignmentPanel
+            selectedId={selectedItemId}
+            offset={currentAlignment}
+            onNudge={(dx, dy) =>
+              onAlignmentChange({ ...currentAlignment, x: currentAlignment.x + dx, y: currentAlignment.y + dy })
+            }
+            onScaleChange={(scale) =>
+              onAlignmentChange({ ...currentAlignment, scale })
+            }
+          />
+        )}
 
       {/* ====== COLOR PICKER (above item grid) ====== */}
       {activeCat.supportsColor && (
