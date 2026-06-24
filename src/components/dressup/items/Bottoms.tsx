@@ -18,19 +18,14 @@ export interface ClothProps {
 /* ------------------------------------------------------------------ */
 /* Helper: render a PNG clothing item at body coordinates             */
 /* ------------------------------------------------------------------ */
-function makePngBottom(src: string): React.FC<ClothProps> {
+function makePngBottom(src: string, defaultY = 0): React.FC<ClothProps> {
   return function PngBottom({ align }: ClothProps) {
-    const { x = 0, y = 0, scale = 1 } = align ?? {}
+    const x = align?.x ?? 0
+    const y = align?.y ?? defaultY
+    const scale = align?.scale ?? 1
     return (
       <g transform={`translate(${x}, ${y}) scale(${scale})`}>
-        <image
-          href={src}
-          x={0}
-          y={0}
-          width={325}
-          height={742}
-          preserveAspectRatio="xMidYMid meet"
-        />
+        <image href={src} x={0} y={0} width={325} height={742} preserveAspectRatio="xMidYMid meet" />
       </g>
     )
   }
