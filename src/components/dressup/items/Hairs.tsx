@@ -29,9 +29,9 @@ interface HairAlignment {
 /* ------------------------------------------------------------------ */
 /* Helper: render a PNG hairstyle with alignment transform             */
 /* ------------------------------------------------------------------ */
-function makePngHair(src: string, align: HairAlignment): React.FC<HairProps> {
-  const { x, y, scale } = align
-  return function PngHair() {
+function makePngHair(src: string, defaultAlign: HairAlignment): React.FC<HairProps & { align?: HairAlignment }> {
+  return function PngHair({ align }: HairProps & { align?: HairAlignment }) {
+    const { x, y, scale } = align ?? defaultAlign
     return (
       <g transform={`translate(${x}, ${y}) scale(${scale})`}>
         <image
