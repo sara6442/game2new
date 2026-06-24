@@ -10,9 +10,9 @@
  * Each accessory is positioned to fit the body's head/neck/shoulders.
  */
 
-export interface AccessoryProps {
+export interface ClothProps {
   color?: string
-  trim?: string
+  align?: { x: number; y: number; scale: number }
 }
 
 export interface AccessoryItem {
