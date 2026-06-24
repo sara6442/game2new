@@ -49,9 +49,9 @@ export function AlignmentPanel({
 }: AlignmentPanelProps) {
   const [copied, setCopied] = useState(false)
 
-  // Only show for hair and dress categories
-  const isAlignable = activeCategory === 'hair' || activeCategory === 'dress'
-
+  // ALL categories support alignment
+  const isAlignable = true
+  
   // Keyboard arrow controls
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
