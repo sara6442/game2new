@@ -34,13 +34,13 @@ export const Top8: React.FC<ClothProps> = makePngTop('/top8.png')
 export const Top9: React.FC<ClothProps> = makePngTop('/top9.png')
 export const Top10: React.FC<ClothProps> = makePngTop('/top10.png')
 export const Top11: React.FC<ClothProps> = makePngTop('/top11.png')
-export const Top12: React.FC<ClothProps> = makePngTop('/top12.png') // Fixed: was '/top2.png'
+export const Top12: React.FC<ClothProps> = makePngTop('/top12.png') 
 export const Top13: React.FC<ClothProps> = makePngTop('/top13.png')
 export const Top14: React.FC<ClothProps> = makePngTop('/top14.png')
 export const Top15: React.FC<ClothProps> = makePngTop('/top15.png')
 export const Top16: React.FC<ClothProps> = makePngTop('/top16.png')
 export const Top17: React.FC<ClothProps> = makePngTop('/top17.png')
-export const Top18: React.FC<ClothProps> = makePngTop('/top18.png') // Added missing
+export const Top18: React.FC<ClothProps> = makePngTop('/top18.png')
 export const Top19: React.FC<ClothProps> = makePngTop('/top19.png')
 export const Top20: React.FC<ClothProps> = makePngTop('/top20.png')
 
@@ -59,7 +59,6 @@ export const TOP_ITEMS: TopItem[] = [
   { id: 'top5', name: 'Floral Top', Component: Top5, sleeveLength: 'long' },
   { id: 'top6', name: 'Ruffled Blouse', Component: Top6, sleeveLength: 'long' },
   { id: 'top7', name: 'Blue Checkered', Component: Top7, sleeveLength: 'short' },
-  { id: 'top8', name: 'Beige Top', Component: Top8, sleeveLength: 'short' }, // Added this
   { id: 'top9', name: 'Silk Tank', Component: Top9, sleeveLength: 'long' },
   { id: 'top10', name: 'Denim Jacket', Component: Top10, sleeveLength: 'long' },
   { id: 'top11', name: 'White Blouse', Component: Top11, sleeveLength: 'long' },
