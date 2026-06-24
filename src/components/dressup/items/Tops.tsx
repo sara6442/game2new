@@ -12,16 +12,17 @@
 
 export interface ClothProps {
   color?: string
-  trim?: string
+  align?: { x: number; y: number; scale: number }
 }
 
 /* ------------------------------------------------------------------ */
 /* Helper: render a PNG clothing item at body coordinates             */
 /* ------------------------------------------------------------------ */
 function makePngTop(src: string): React.FC<ClothProps> {
-  return function PngTop() {
+  return function PngTop({ align }: ClothProps) {
+    const { x = 0, y = 0, scale = 1 } = align ?? {}
     return (
-      <g>
+      <g transform={`translate(${x}, ${y}) scale(${scale})`}>
         <image
           href={src}
           x={0}
@@ -34,7 +35,6 @@ function makePngTop(src: string): React.FC<ClothProps> {
     )
   }
 }
-
 /* ------------------------------------------------------------------ */
 /* Helper: render a PNG clothing item WITH alignment support          */
 /* ------------------------------------------------------------------ */
