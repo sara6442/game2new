@@ -35,7 +35,7 @@ export const Hat2 = makePngHat('/hat2.png', { x: -1, y: -89, scale: 1.14 })
 export const Hat3 = makePngHat('/hat3.png', { x: -10, y: -89, scale: 1.14 })
 export const Hat4 = makePngHat('/hat4.png', { x: -44, y: -222, scale: 1.25 })
 export const Hat5 = makePngHat('/hat5.png', { x: -44, y: -64, scale: 1.25 })
-export const Hat1 = makePngHat('/hat1.png', { x: -15, y: -11, scale: 1.09 })
+export const Hat1 = makePngHat('/hat1.png', { x: 15, y: -86, scale: 1.07 })
 export const Hat6 = makePngHat('/hat6.png', { x: 8, y: -81, scale: 1.12 })
 
 export const HAT_ITEMS: HatItem[] = [
