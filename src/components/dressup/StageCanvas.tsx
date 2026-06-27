@@ -23,7 +23,7 @@
  *   z=7    Shoes
  *   z=8    Accessories
  *   z=9    Decorations
- *   z=9.9  faceacc9 — black cloud, covers EVERYTHING including hair and hats
+ *   z=9.9  face9 — black cloud, covers EVERYTHING including hair, hats, and all other items
  */
 
 import { Body } from './items/Body'
@@ -112,8 +112,8 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   // Glove fluffy check
   const gloveFluffy = isGloveFluffy(selection.glove)
 
-  // faceacc9 = black cloud = renders above EVERYTHING
-  const isFaceAcc9 = selection.faceAcc === 'face9'
+  // ✅ face9 = black cloud = renders above EVERYTHING
+  const isFace9 = selection.faceAcc === 'face9'
 
   // Alignment helper
   const wrapAlign = (
@@ -209,8 +209,8 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
           <GlassesComp align={undefined} />
         )}
 
-        {/* z=5.85: FACE ACC 1-8 — under hair front (faceacc9 is handled at top) */}
-        {FaceAccComp && !isFaceAcc9 && wrapAlign('faceAcc', selection.faceAcc,
+        {/* z=5.85: FACE ACC 1-8 — under hair front (face9 is handled at the very top) */}
+        {FaceAccComp && !isFace9 && wrapAlign('faceAcc', selection.faceAcc,
           <FaceAccComp align={undefined} />
         )}
 
@@ -244,8 +244,8 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
           <DecorationComp />
         )}
 
-        {/* z=9.9: faceacc9 BLACK CLOUD — above EVERYTHING including hair, hats, all */}
-        {FaceAccComp && isFaceAcc9 && wrapAlign('faceAcc', selection.faceAcc,
+        {/* 🎯 z=9.9: face9 BLACK CLOUD — above EVERYTHING including hair, hats, accessories, decorations */}
+        {FaceAccComp && isFace9 && wrapAlign('faceAcc', selection.faceAcc,
           <FaceAccComp align={undefined} />
         )}
 
