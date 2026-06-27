@@ -210,14 +210,14 @@ export function useDressup() {
   }, [])
  
   const getCurrentAlignment = useCallback((): AlignmentValues => {
-    const selectedId = (selection as Record<string, string | null>)[activeCategory]
+    const selectedId = (selection as unknown as Record<string, string | null>) [activeCategory]
     if (!selectedId) return { x: 0, y: 0, scale: 1 }
     return alignments[selectedId] ?? { x: 0, y: 0, scale: 1 }
   }, [selection, activeCategory, alignments])
  
   const setCurrentAlignment = useCallback(
     (values: AlignmentValues) => {
-      const selectedId = (selection as Record<string, string | null>)[activeCategory]
+      const selectedId =(selection as unknown as Record<string, string | null>) [activeCategory]
       if (!selectedId) return
       setAlignments((prev) => ({ ...prev, [selectedId]: values }))
     },
@@ -225,7 +225,7 @@ export function useDressup() {
   )
  
   const resetCurrentAlignment = useCallback(() => {
-    const selectedId = (selection as Record<string, string | null>)[activeCategory]
+    const selectedId = (selection as unknown as Record<string, string | null>) [activeCategory]
     if (!selectedId) return
     setAlignments((prev) => {
       const next = { ...prev }
