@@ -51,7 +51,7 @@ export const HAND_DECO_ITEMS: HandDecoItem[] = [
 { id: 'handdeco4', name: 'Red Nails', Component: HandDeco4 },
 { id: 'handdeco5', name: 'Pink Nails', Component: HandDeco5 },
 { id: 'handdeco6', name: 'Green Nails', Component: HandDeco6 },
-{ id: 'handdeco7', name: 'Navy Nails', Component: HandDec7 },
+{ id: 'handdeco7', name: 'Navy Nails', Component: HandDeco7 },
 { id: 'handdeco8', name: 'Black Nails', Component: HandDeco8 },
 { id: 'handdeco9', name: 'French Nails', Component: HandDeco9 },
 ]
