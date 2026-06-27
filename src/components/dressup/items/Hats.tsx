@@ -34,6 +34,8 @@ function makePngHat(src: string, defaultAlign = { x: 0, y: 0, scale: 1 }): React
  export const Hat4 = makePngHat('/hat4.png', { x: -44, y: -222, scale: 1.25 })
  export const Hat5 = makePngHat('/hat5.png', { x: -44, y: -64, scale: 1.25 })
  export const Hat1 = makePngHat('/hat1.png', { x: 8, y: -81, scale: 1.12 })
+ export const Hat6 = makePngHat('/hat6.png', { x: 8, y: -81, scale: 1.12 })
+
 
 
 export const HAT_ITEMS: HatItem[] = [
@@ -42,6 +44,8 @@ export const HAT_ITEMS: HatItem[] = [
  { id: 'hat4', name: 'Rosy Hat', Component: Hat4 },
  { id: 'hat5', name: 'Black Rose Hat', Component: Hat5 },
  { id: 'hat1', name: 'Princess Chef', Component: Hat1 },
+   { id: 'hat6', name: 'Graduation Princess', Component: Hat6 },
+
 ]
 
 export default HAT_ITEMS
