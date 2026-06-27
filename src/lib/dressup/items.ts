@@ -9,7 +9,6 @@ import type { ClothProps as DressClothProps, DressItem }   from '@/components/dr
 import type { CoatProps as CoatClothProps, CoatItem }      from '@/components/dressup/items/Coats'
 import type { HairProps, HairStyle }                       from '@/components/dressup/items/Hairs'
 import type { BackgroundProps, BackgroundItem }            from '@/components/dressup/items/Backgrounds'
-import type { AccessoryProps, AccessoryItem }              from '@/components/dressup/items/Accessories'
 import type { ShoeProps, ShoeItem }                        from '@/components/dressup/items/Shoes'
 import type { DecorationProps, DecorationItem }            from '@/components/dressup/items/Decorations'
 import type { GlassesProps, GlassesItem }                  from '@/components/dressup/items/FaceAndGlasses'
@@ -28,7 +27,6 @@ import { DRESS_ITEMS }      from '@/components/dressup/items/Dresses'
 import { COAT_ITEMS }       from '@/components/dressup/items/Coats'
 import { HAIR_STYLES }      from '@/components/dressup/items/Hairs'
 import { BACKGROUND_ITEMS } from '@/components/dressup/items/Backgrounds'
-import { ACCESSORY_ITEMS }  from '@/components/dressup/items/Accessories'
 import { SHOE_ITEMS }       from '@/components/dressup/items/Shoes'
 import { DECORATION_ITEMS } from '@/components/dressup/items/Decorations'
 import { GLASSES_ITEMS }    from '@/components/dressup/items/FaceAndGlasses'
@@ -49,17 +47,16 @@ export type CategoryId =
   | 'dress'
   | 'coat'
   | 'shoe'
-  | 'accessory'
-  | 'decoration'
-  | 'glasses'    // glasses — under hair (face9 is over)
-  | 'faceAcc'    // face accessories — under hair (faceacc9 is over)
-  | 'hairAcc'    // hair clips/pins — mutually exclusive with hat
-  | 'hat'        // hats — mutually exclusive with hairAcc
-  | 'handDeco'   // nails, henna — lowest hand layer
-  | 'ring'       // rings — above nails, under gloves
-  | 'glove'      // gloves — fluffy=above sleeves, non-fluffy=under
-  | 'bracelet'   // bracelets — above gloves
-  | 'necklace'   // necklaces — above top/dress neckline
+  | 'decoration'      // ✅ Kept as separate category
+  | 'glasses'         // glasses — under hair (face9 is over)
+  | 'faceAcc'         // face accessories — under hair (faceacc9 is over)
+  | 'hairAcc'         // hair clips/pins — mutually exclusive with hat
+  | 'hat'             // hats — mutually exclusive with hairAcc
+  | 'handDeco'        // nails, henna — lowest hand layer
+  | 'ring'            // rings — above nails, under gloves
+  | 'glove'           // gloves — fluffy=above sleeves, non-fluffy=under
+  | 'bracelet'        // bracelets — above gloves
+  | 'necklace'        // necklaces — above top/dress neckline
  
 export interface Category {
   id: CategoryId
@@ -117,29 +114,42 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     id: 'other',
     label: 'Other',
     icon: '✨',
-    children: ['shoe', 'accessory', 'decoration'],
+    children: ['shoe', 'decoration'], // ✅ 'accessory' removed
   },
 ]
  
 export const CATEGORIES: Category[] = [
-  { id: 'background', label: 'Background',  icon: '🏛️',  supportsColor: false, palette: [] },
-  { id: 'glasses',    label: 'Glasses',     icon: '👓',  supportsColor: false, palette: [] },
-  { id: 'faceAcc',    label: 'Face Acc.',   icon: '💄',  supportsColor: false, palette: [] },
-  { id: 'hair',       label: 'Hairstyle',   icon: '💇‍♀️', supportsColor: false, palette: [] },
-  { id: 'hairAcc',    label: 'Hair Acc.',   icon: '🎀',  supportsColor: false, palette: [] },
-  { id: 'hat',        label: 'Hats',        icon: '🎩',  supportsColor: false, palette: [] },
-  { id: 'top',        label: 'Tops',        icon: '👚',  supportsColor: false, palette: [] },
-  { id: 'bottom',     label: 'Bottoms',     icon: '👖',  supportsColor: false, palette: [] },
-  { id: 'dress',      label: 'Dresses',     icon: '👗',  supportsColor: false, palette: [] },
-  { id: 'coat',       label: 'Coats',       icon: '🧥',  supportsColor: false, palette: [] },
-  { id: 'necklace',   label: 'Necklaces',   icon: '📿',  supportsColor: false, palette: [] },
-  { id: 'handDeco',   label: 'Hand Deco.',  icon: '💅',  supportsColor: false, palette: [] },
-  { id: 'ring',       label: 'Rings',       icon: '💍',  supportsColor: false, palette: [] },
-  { id: 'glove',      label: 'Gloves',      icon: '🧤',  supportsColor: false, palette: [] },
-  { id: 'bracelet',   label: 'Bracelets',   icon: '📿',  supportsColor: false, palette: [] },
-  { id: 'shoe',       label: 'Shoes',       icon: '👟',  supportsColor: false, palette: [] },
-  { id: 'accessory',  label: 'Accessories', icon: '✨',  supportsColor: false, palette: [] },
-  { id: 'decoration', label: 'Decorations', icon: '🌷',  supportsColor: false, palette: [] },
+  // ── Scene ────────────────────────────────────────────────────────────────
+  { id: 'background', label: 'Background', icon: '🏛️', supportsColor: false, palette: [] },
+  
+  // ── Face ──────────────────────────────────────────────────────────────────
+  { id: 'glasses', label: 'Glasses', icon: '👓', supportsColor: false, palette: [] },
+  { id: 'faceAcc', label: 'Face Acc.', icon: '💄', supportsColor: false, palette: [] },
+  
+  // ── Hair ──────────────────────────────────────────────────────────────────
+  { id: 'hair', label: 'Hairstyle', icon: '💇‍♀️', supportsColor: false, palette: [] },
+  { id: 'hairAcc', label: 'Hair Acc.', icon: '🎀', supportsColor: false, palette: [] },
+  { id: 'hat', label: 'Hats', icon: '🎩', supportsColor: false, palette: [] },
+  
+  // ── Clothing ──────────────────────────────────────────────────────────────
+  { id: 'top', label: 'Tops', icon: '👚', supportsColor: false, palette: [] },
+  { id: 'bottom', label: 'Bottoms', icon: '👖', supportsColor: false, palette: [] },
+  { id: 'dress', label: 'Dresses', icon: '👗', supportsColor: false, palette: [] },
+  { id: 'coat', label: 'Coats', icon: '🧥', supportsColor: false, palette: [] },
+  
+  // ── Neck ──────────────────────────────────────────────────────────────────
+  { id: 'necklace', label: 'Necklaces', icon: '📿', supportsColor: false, palette: [] },
+  
+  // ── Hands ──────────────────────────────────────────────────────────────────
+  { id: 'handDeco', label: 'Hand Deco.', icon: '💅', supportsColor: false, palette: [] },
+  { id: 'ring', label: 'Rings', icon: '💍', supportsColor: false, palette: [] },
+  { id: 'glove', label: 'Gloves', icon: '🧤', supportsColor: false, palette: [] },
+  { id: 'bracelet', label: 'Bracelets', icon: '📿', supportsColor: false, palette: [] },
+  
+  // ── Other ──────────────────────────────────────────────────────────────────
+  { id: 'shoe', label: 'Shoes', icon: '👟', supportsColor: false, palette: [] },
+  { id: 'decoration', label: 'Decorations', icon: '🌷', supportsColor: false, palette: [] },
+  // ❌ 'accessory' REMOVED
 ]
  
 export interface AnyItem {
@@ -165,10 +175,9 @@ export const ITEMS_BY_CATEGORY: Record<CategoryId, AnyItem[]> = {
   dress:       DRESS_ITEMS      as unknown as AnyItem[],
   coat:        COAT_ITEMS       as unknown as AnyItem[],
   shoe:        SHOE_ITEMS       as unknown as AnyItem[],
-  accessory:   ACCESSORY_ITEMS  as unknown as AnyItem[],
   decoration:  DECORATION_ITEMS as unknown as AnyItem[],
   glasses:     GLASSES_ITEMS    as unknown as AnyItem[],
-  faceAcc:     FACE_ACC_ITEMS   as unknown as AnyItem[],   // ← own array, not GLASSES_ITEMS
+  faceAcc:     FACE_ACC_ITEMS   as unknown as AnyItem[],
   hairAcc:     HAIR_ACC_ITEMS   as unknown as AnyItem[],
   hat:         HAT_ITEMS        as unknown as AnyItem[],
   handDeco:    HAND_DECO_ITEMS  as unknown as AnyItem[],
@@ -180,14 +189,14 @@ export const ITEMS_BY_CATEGORY: Record<CategoryId, AnyItem[]> = {
  
 export {
   HAIR_STYLES, TOP_ITEMS, BOTTOM_ITEMS, DRESS_ITEMS, COAT_ITEMS,
-  BACKGROUND_ITEMS, ACCESSORY_ITEMS, SHOE_ITEMS, DECORATION_ITEMS,
+  BACKGROUND_ITEMS, SHOE_ITEMS, DECORATION_ITEMS,
   GLASSES_ITEMS, FACE_ACC_ITEMS, HAIR_ACC_ITEMS, HAT_ITEMS,
   GLOVE_ITEMS, BRACELET_ITEMS, HAND_DECO_ITEMS, RING_ITEMS, NECKLACE_ITEMS,
 }
  
 export type {
   ClothProps, BottomClothProps, DressClothProps, CoatClothProps,
-  HairProps, BackgroundProps, AccessoryProps, ShoeProps, DecorationProps,
+  HairProps, BackgroundProps, ShoeProps, DecorationProps,
   GlassesProps, FaceAccProps, HairAccProps, HatProps,
   GloveProps, BraceletProps, HandDecoProps, RingProps, NecklaceProps,
 }
