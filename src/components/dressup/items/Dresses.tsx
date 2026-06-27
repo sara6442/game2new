@@ -66,7 +66,7 @@ export const DRESS_ITEMS: DressItem[] = [
   { id: 'dress16', name: 'Green Victorian', Component: Dress16, sleeveLength: 'long' },
   { id: 'dress17', name: 'White Dress', Component: Dress17, sleeveLength: 'short' },
   { id: 'dress18', name: 'Yellow Floral', Component: Dress18, sleeveLength: 'short' },
-  { id: 'dress18', name: 'Graduated Princess', Component: Dress18, sleeveLength: 'short' },
+  { id: 'dress19', name: 'Graduated Princess', Component: Dress19, sleeveLength: 'long' },
 ]
 
 export default DRESS_ITEMS
