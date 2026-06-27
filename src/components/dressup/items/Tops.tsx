@@ -48,7 +48,7 @@ export const Top15: React.FC<ClothProps> = makePngTop('/top15.png', { x: 31, y: 
 export const Top16: React.FC<ClothProps> = makePngTop('/top16.png', { x: 0, y: 36, scale: 1 })
 export const Top17: React.FC<ClothProps> = makePngTop('/top17.png', { x: 28, y: 59, scale: 0.81 })
 export const Top18: React.FC<ClothProps> = makePngTop('/top18.png', { x: 40, y: 59, scale: 0.75 })
-export const Top19: React.FC<ClothProps> = makePngTop('/top19.png', { x: 34, y: 59, scale: 0.79 })
+export const Top19: React.FC<ClothProps> = makePngTop('/top19.png', { x: -4, y: -1, scale: 1.01 })
 export const Top20: React.FC<ClothProps> = makePngTop('/top20.png', { x: 25, y: 32, scale: 0.84 })
 
 export interface TopItem {
