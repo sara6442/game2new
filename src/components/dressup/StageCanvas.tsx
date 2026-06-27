@@ -1,32 +1,31 @@
 'use client'
- 
+
 /**
  * StageCanvas.tsx — The layered model canvas.
  *
  * Full z-order (bottom → top):
  *   z=0    Background
  *   z=1    Hair back
- *   z=2    Body (bra or no-bra depending on active clothing)
+ *   z=2    Body (bra or no-bra)
  *   z=3.1  Hand decorations (nails, henna)
  *   z=3.15 Rings
  *   z=3.2  Gloves NON-FLUFFY (under long sleeves)
  *   z=3.3  Bracelets
  *   z=3    Bottom
- *   z=4    Top        ← long sleeves cover non-fluffy hand items
- *   z=5    Dress      ← long sleeves cover non-fluffy hand items
+ *   z=4    Top / z=5 Dress  ← long sleeves cover non-fluffy hand items
  *   z=5.5  Coat
- *   z=5.6  Gloves FLUFFY (above long sleeves — always visible)
+ *   z=5.6  Gloves FLUFFY (above long sleeves)
  *   z=5.7  Necklace
- *   z=5.8  Glasses (under hair, except id='face9' → over hair)
- *   z=5.85 Face Accessories (under hair, except id='faceacc9' → over hair)
+ *   z=5.8  Glasses (always under hair)
+ *   z=5.85 FaceAcc items 1–8 (under hair)
  *   z=6    Hair front
- *   z=6.2  face9 glasses / faceacc9 accessories OVER hair front
- *   z=6.5  Hat / Hair accessories (both over hair; mutually exclusive)
+ *   z=6.5  Hat / Hair accessories (over hair, mutually exclusive)
  *   z=7    Shoes
  *   z=8    Accessories
  *   z=9    Decorations
+ *   z=9.9  faceacc9 — black cloud, covers EVERYTHING including hair and hats
  */
- 
+
 import { Body } from './items/Body'
 import {
   HAIR_STYLES,
@@ -52,7 +51,7 @@ import {
 import { isGloveFluffy } from '@/lib/dressup/useDressup'
 import { CANVAS_VIEWBOX, BODY_TRANSFORM } from '@/lib/dressup/canvas-dimensions'
 import type { AlignmentValues } from '@/lib/dressup/useDressup'
- 
+
 interface StageCanvasProps {
   selection: {
     background:  string | null
@@ -78,15 +77,13 @@ interface StageCanvasProps {
   alignments: Record<string, AlignmentValues>
   alignOverride?: { category: CategoryId; values: AlignmentValues } | null
 }
- 
-// Items that use the no-bra body image
+
 const NO_BRA_IDS = new Set([
   'top7', 'top15', 'top17', 'top19',
   'dress4', 'dress12', 'dress13', 'dress14', 'dress17',
 ])
- 
+
 export function StageCanvas({ selection, colors, alignments, alignOverride }: StageCanvasProps) {
-  // ── Component lookups ────────────────────────────────────────────────────
   const BackgroundComp  = BACKGROUND_ITEMS.find((b) => b.id === selection.background)?.Component
   const HairStyle       = HAIR_STYLES.find((h) => h.id === selection.hair)
   const TopComp         = TOP_ITEMS.find((t) => t.id === selection.top)?.Component
@@ -96,9 +93,7 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   const ShoeComp        = SHOE_ITEMS.find((s) => s.id === selection.shoe)?.Component
   const AccessoryComp   = ACCESSORY_ITEMS.find((a) => a.id === selection.accessory)?.Component
   const DecorationComp  = DECORATION_ITEMS.find((d) => d.id === selection.decoration)?.Component
-  // Glasses — from FaceAndGlasses.tsx
   const GlassesComp     = GLASSES_ITEMS.find((g) => g.id === selection.glasses)?.Component
-  // Face accessories — from FaceAcc.tsx (separate pool)
   const FaceAccComp     = FACE_ACC_ITEMS.find((f) => f.id === selection.faceAcc)?.Component
   const HairAccComp     = HAIR_ACC_ITEMS.find((h) => h.id === selection.hairAcc)?.Component
   const HatComp         = HAT_ITEMS.find((h) => h.id === selection.hat)?.Component
@@ -107,21 +102,20 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   const HandDecoComp    = HAND_DECO_ITEMS.find((h) => h.id === selection.handDeco)?.Component
   const RingComp        = RING_ITEMS.find((r) => r.id === selection.ring)?.Component
   const NecklaceComp    = NECKLACE_ITEMS.find((n) => n.id === selection.necklace)?.Component
- 
-  // ── Body image ───────────────────────────────────────────────────────────
+
+  // Body image
   const activeClothingId = selection.dress ?? selection.top ?? null
   const bodySrc = (activeClothingId && NO_BRA_IDS.has(activeClothingId))
     ? '/Body-H-NB.png'
     : '/Body-H-B.png'
- 
-  // ── Glove fluffy check ───────────────────────────────────────────────────
+
+  // Glove fluffy check
   const gloveFluffy = isGloveFluffy(selection.glove)
- 
-  // ── Over-hair exceptions ─────────────────────────────────────────────────
-  const isFace9     = selection.glasses === 'face9'      // glasses over hair
-  const isFaceAcc9  = selection.faceAcc === 'faceacc9'   // face acc over hair
- 
-  // ── Alignment helper ─────────────────────────────────────────────────────
+
+  // faceacc9 = black cloud = renders above EVERYTHING
+  const isFaceAcc9 = selection.faceAcc === 'face9'
+
+  // Alignment helper
   const wrapAlign = (
     category: CategoryId,
     itemId: string | null,
@@ -137,13 +131,11 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
     }
     return element
   }
- 
-  // Hair components bake in their own default alignment.
-  // Pass override only when align mode is active on hair or a saved override exists.
+
   const hairAlign = alignOverride?.category === 'hair'
     ? alignOverride.values
     : (selection.hair && alignments[selection.hair]) || undefined
- 
+
   return (
     <svg
       viewBox={CANVAS_VIEWBOX}
@@ -153,116 +145,113 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
     >
       {/* z=0: BACKGROUND */}
       {BackgroundComp && <BackgroundComp />}
- 
+
       <g transform={BODY_TRANSFORM}>
- 
+
         {/* z=1: HAIR BACK */}
         {HairStyle && <HairStyle.back color={colors.hair} />}
- 
+
         {/* z=2: BODY */}
         <Body src={bodySrc} />
- 
-        {/* z=3.1: HAND DECORATIONS — nails, henna (skin level) */}
+
+        {/* z=3.1: HAND DECORATIONS — nails, henna */}
         {HandDecoComp && wrapAlign('handDeco', selection.handDeco,
           <HandDecoComp align={undefined} />
         )}
- 
+
         {/* z=3.15: RINGS — above nails, under gloves */}
         {RingComp && wrapAlign('ring', selection.ring,
           <RingComp align={undefined} />
         )}
- 
+
         {/* z=3.2: GLOVES NON-FLUFFY — under long sleeves */}
         {GloveComp && !gloveFluffy && wrapAlign('glove', selection.glove,
           <GloveComp align={undefined} />
         )}
- 
+
         {/* z=3.3: BRACELETS — above gloves, still under long sleeves */}
         {BraceletComp && wrapAlign('bracelet', selection.bracelet,
           <BraceletComp align={undefined} />
         )}
- 
+
         {/* z=3: BOTTOM */}
         {!selection.dress && BottomComp && wrapAlign('bottom', selection.bottom,
           <BottomComp color={colors.bottom} />
         )}
- 
+
         {/* z=4: TOP — long sleeves cover non-fluffy hand items */}
         {!selection.dress && TopComp && wrapAlign('top', selection.top,
           <TopComp color={colors.top} />
         )}
- 
+
         {/* z=5: DRESS — long sleeves cover non-fluffy hand items */}
         {selection.dress && DressComp && wrapAlign('dress', selection.dress,
           <DressComp color={colors.dress} />
         )}
- 
+
         {/* z=5.5: COAT — always in front regardless of sleeves */}
         {CoatComp && wrapAlign('coat', selection.coat,
           <CoatComp color={colors.coat} />
         )}
- 
+
         {/* z=5.6: GLOVES FLUFFY — above long sleeves, always visible */}
         {GloveComp && gloveFluffy && wrapAlign('glove', selection.glove,
           <GloveComp align={undefined} />
         )}
- 
-        {/* z=5.7: NECKLACE — above neckline of top/dress/coat */}
+
+        {/* z=5.7: NECKLACE — above neckline */}
         {NecklaceComp && wrapAlign('necklace', selection.necklace,
           <NecklaceComp align={undefined} />
         )}
- 
-        {/* z=5.8: GLASSES — under hair front (except face9 which is over hair) */}
-        {GlassesComp && !isFace9 && wrapAlign('glasses', selection.glasses,
+
+        {/* z=5.8: GLASSES — always under hair front */}
+        {GlassesComp && wrapAlign('glasses', selection.glasses,
           <GlassesComp align={undefined} />
         )}
- 
-        {/* z=5.85: FACE ACCESSORIES — under hair front (except faceacc9) */}
+
+        {/* z=5.85: FACE ACC 1-8 — under hair front (faceacc9 is handled at top) */}
         {FaceAccComp && !isFaceAcc9 && wrapAlign('faceAcc', selection.faceAcc,
           <FaceAccComp align={undefined} />
         )}
- 
+
         {/* z=6: HAIR FRONT */}
         {HairStyle && (
           <HairStyle.front color={colors.hair} align={hairAlign} />
         )}
- 
-        {/* z=6.2: face9 glasses OVER hair front */}
-        {GlassesComp && isFace9 && wrapAlign('glasses', selection.glasses,
-          <GlassesComp align={undefined} />
-        )}
- 
-        {/* z=6.2: faceacc9 face accessory OVER hair front */}
-        {FaceAccComp && isFaceAcc9 && wrapAlign('faceAcc', selection.faceAcc,
-          <FaceAccComp align={undefined} />
-        )}
- 
+
         {/* z=6.5: HAT — over hair (mutually exclusive with hairAcc) */}
         {HatComp && wrapAlign('hat', selection.hat,
           <HatComp align={undefined} />
         )}
- 
+
         {/* z=6.5: HAIR ACCESSORY — over hair (mutually exclusive with hat) */}
         {HairAccComp && wrapAlign('hairAcc', selection.hairAcc,
           <HairAccComp align={undefined} />
         )}
- 
+
         {/* z=7: SHOES */}
         {ShoeComp && wrapAlign('shoe', selection.shoe,
           <ShoeComp color={colors.shoe} />
         )}
- 
+
         {/* z=8: ACCESSORIES */}
         {AccessoryComp && wrapAlign('accessory', selection.accessory,
           <AccessoryComp color={colors.accessory} />
         )}
- 
+
         {/* z=9: DECORATIONS */}
         {DecorationComp && wrapAlign('decoration', selection.decoration,
           <DecorationComp />
         )}
- 
+
+        {/* z=9.9: faceacc9 BLACK CLOUD — above EVERYTHING including hair, hats, all */}
+        {FaceAccComp && isFaceAcc9 && wrapAlign('faceAcc', selection.faceAcc,
+          <FaceAccComp align={undefined} />
+        )}
+
       </g>
     </svg>
   )
 }
+
+export default StageCanvas
