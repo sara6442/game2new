@@ -47,13 +47,13 @@ export const HandDeco9 = makePngHandDeco('/nails6.png', { x: 0, y: 0, scale: 1 }
 export const HAND_DECO_ITEMS: HandDecoItem[] = [
 { id: 'handdeco1', name: 'Rolling Pin',   Component: HandDeco1 },
 { id: 'handdeco2', name: 'Henna Design', Component: HandDeco2 },
-  { id: 'handdeco2', name: 'Henna Design2', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'Red Nails', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'Pink Nails', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'Green Nails', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'Navy Nails', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'Black Nails', Component: HandDeco2 },
-{ id: 'handdeco2', name: 'French Nails', Component: HandDeco2 },
+  { id: 'handdeco3', name: 'Henna Design2', Component: HandDeco3 },
+{ id: 'handdeco4', name: 'Red Nails', Component: HandDeco4 },
+{ id: 'handdeco5', name: 'Pink Nails', Component: HandDeco5 },
+{ id: 'handdeco6', name: 'Green Nails', Component: HandDeco6 },
+{ id: 'handdeco7', name: 'Navy Nails', Component: HandDec7 },
+{ id: 'handdeco8', name: 'Black Nails', Component: HandDeco8 },
+{ id: 'handdeco9', name: 'French Nails', Component: HandDeco9 },
 ]
 
 export default HAND_DECO_ITEMS
