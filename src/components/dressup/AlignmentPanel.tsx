@@ -13,27 +13,25 @@ interface AlignmentPanelProps {
   offset: Offset
   onNudge: (dx: number, dy: number) => void
   onScaleChange: (scale: number) => void
-  onReset: () => void // ✅ NEW
+  onReset: () => void // ✅ NEW: Reset to default
 }
 
-// Add button in the panel:
-<button
-  onClick={onReset}
-  className="w-full text-sm bg-gray-500 hover:bg-gray-600 text-white rounded py-1.5"
->
-  🔄 Reset to Default
-</button>
-
-export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleChange }: AlignmentPanelProps) {
-  // ✅ Local state to track values without losing precision
+export default function AlignmentPanel({ 
+  selectedId, 
+  offset, 
+  onNudge, 
+  onScaleChange,
+  onReset // ✅ NEW
+}: AlignmentPanelProps) {
+  // Local state to track values without losing precision
   const [localOffset, setLocalOffset] = useState<Offset>(offset)
 
-  // ✅ Update local state when offset prop changes (from parent)
+  // Update local state when offset prop changes (from parent)
   useEffect(() => {
     setLocalOffset(offset)
   }, [offset])
 
-  // ✅ Also update when selectedId changes (new item selected)
+  // Also update when selectedId changes (new item selected)
   useEffect(() => {
     setLocalOffset(offset)
   }, [selectedId, offset])
@@ -119,9 +117,17 @@ export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleCha
         </div>
       </div>
 
+      {/* ✅ NEW: Reset button */}
+      <button
+        onClick={onReset}
+        className="w-full text-sm bg-gray-500 hover:bg-gray-600 text-white rounded py-1.5 transition-colors"
+      >
+        🔄 Reset to Default
+      </button>
+
       <button
         onClick={copyValues}
-        className="w-full text-sm bg-indigo-500 hover:bg-indigo-600 text-white rounded py-1.5"
+        className="w-full text-sm bg-indigo-500 hover:bg-indigo-600 text-white rounded py-1.5 transition-colors"
       >
         📋 Copy Values
       </button>
