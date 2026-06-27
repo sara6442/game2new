@@ -32,8 +32,8 @@ function makePngBracelet(src: string, defaultAlign = { x: 0, y: 0, scale: 1 }): 
 
 // ── Add your bracelets here ──────────────────────────────────────────────────
 export const Bracelet1 = makePngBracelet('/bracelet1.png', { x: 0, y: 0, scale: 1 })
-export const Bracelet2 = makePngBracelet('/bracelet2.png', { x: 0, y: 0, scale: 1 })
-export const Bracelet3 = makePngBracelet('/bracelet3.png', { x: 0, y: 0, scale: 1 })
+export const Bracelet2 = makePngBracelet('/bracelet2.png', { x: -1, y: 117, scale: 0.69 })
+export const Bracelet3 = makePngBracelet('/bracelet3.png', { x: 13, y: 73, scale: 0.83 })
 
 
 export const BRACELET_ITEMS: BraceletItem[] = [
