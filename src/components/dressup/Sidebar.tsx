@@ -1,27 +1,28 @@
 'use client'
 
 /**
- * Sidebar.tsx — Right-side control panel.
+ * Sidebar.tsx — Right-side control panel with grouped categories.
  *
  * Layout:
  *   ┌──────────────────────────┐
- *   │  Category list           │  ← tall box, scrollable up/down if needed
- *   │  (Background, Hair, ...) │
+ *   │  Group tabs              │  ← Hair / Face / Clothing / Hands / etc.
  *   ├──────────────────────────┤
- *   │  Color picker            │  ← ABOVE the item grid (when category supports color)
+ *   │  Sub-category pills      │  ← e.g. under Hair: Styles | Accessories | Hats
  *   ├──────────────────────────┤
- *   │  Item grid (mini previews)│  ← square blocks with mini pictures
- *   │                          │
+ *   │  Item grid (mini previews)│
  *   └──────────────────────────┘
- *
- * The whole panel is fixed-height (no page scroll); only the
- * category list scrolls if it overflows, and the items grid has
- * its own scroll area.
  */
 
-import { CATEGORIES, ITEMS_BY_CATEGORY, type CategoryId } from '@/lib/dressup/items'
+import { useState } from 'react'
+import {
+  CATEGORIES,
+  CATEGORY_GROUPS,
+  ITEMS_BY_CATEGORY,
+  type CategoryId,
+} from '@/lib/dressup/items'
 import { CANVAS_VIEWBOX, BODY_TRANSFORM } from '@/lib/dressup/canvas-dimensions'
 import { Body } from './items/Body'
+import { HAIR_STYLES } from '@/lib/dressup/items'
 import AlignmentPanel from './AlignmentPanel'
 import type { AlignmentValues } from '@/lib/dressup/useDressup'
 import { cn } from '@/lib/utils'
@@ -39,6 +40,21 @@ interface SidebarProps {
   onAlignmentReset: () => void
 }
 
+// Helper: produce a slightly darker trim color
+function getTrimFor(color: string): string {
+  if (color.startsWith('#') && color.length === 7) {
+    const r = Math.max(0, parseInt(color.slice(1, 3), 16) - 40)
+    const g = Math.max(0, parseInt(color.slice(3, 5), 16) - 40)
+    const b = Math.max(0, parseInt(color.slice(5, 7), 16) - 40)
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+  }
+  return color
+}
+
+const HAIR_STYLES_LOOKUP = Object.fromEntries(
+  HAIR_STYLES.map((h) => [h.id, h]),
+) as Record<string, (typeof HAIR_STYLES)[number]>
+
 export function Sidebar({
   selection,
   colors,
@@ -51,49 +67,95 @@ export function Sidebar({
   onAlignmentChange,
   onAlignmentReset,
 }: SidebarProps) {
+  // Find which group owns the current activeCategory
+  const activeGroup = CATEGORY_GROUPS.find((g) => g.children.includes(activeCategory))
+  const [openGroupId, setOpenGroupId] = useState<string>(activeGroup?.id ?? CATEGORY_GROUPS[0].id)
+
+  const currentGroup = CATEGORY_GROUPS.find((g) => g.id === openGroupId) ?? CATEGORY_GROUPS[0]
+  // Sub-categories visible in current group
+  const subCats = currentGroup.children.map((id) => CATEGORIES.find((c) => c.id === id)!).filter(Boolean)
+
   const activeCat = CATEGORIES.find((c) => c.id === activeCategory)!
-  const items = ITEMS_BY_CATEGORY[activeCategory]
+  const items = ITEMS_BY_CATEGORY[activeCategory] ?? []
   const selectedItemId = selection[activeCategory]
   const activeColor = colors[activeCategory]
 
+  // Does any child of a group have a selection?
+  const groupHasSelection = (groupId: string) => {
+    const group = CATEGORY_GROUPS.find((g) => g.id === groupId)
+    return group?.children.some((id) => selection[id] !== null) ?? false
+  }
+
   return (
-    <div className="flex h-full w-full flex-col gap-3 p-3">
-      {/* ====== CATEGORY LIST (scrollable) ====== */}
-      <div className="shrink-0">
-        <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">
-          Categories
+    <div className="flex h-full w-full flex-col overflow-hidden">
+
+      {/* ====== GROUP TABS ====== */}
+      <div className="shrink-0 border-b border-stone-200 bg-stone-50 px-2 pt-2">
+        <div className="flex flex-wrap gap-1 pb-2">
+          {CATEGORY_GROUPS.map((group) => {
+            const isOpen = group.id === openGroupId
+            const hasSel = groupHasSelection(group.id)
+            return (
+              <button
+                key={group.id}
+                type="button"
+                onClick={() => {
+                  setOpenGroupId(group.id)
+                  // Auto-select first child if current activeCategory not in this group
+                  if (!group.children.includes(activeCategory)) {
+                    onSelectCategory(group.children[0])
+                  }
+                }}
+                className={cn(
+                  'relative flex items-center gap-1 rounded-md px-2.5 py-1.5 text-[11px] font-semibold tracking-wide transition-all',
+                  isOpen
+                    ? 'bg-stone-800 text-amber-50 shadow-sm'
+                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200',
+                )}
+              >
+                <span>{group.icon}</span>
+                <span>{group.label}</span>
+                {hasSel && (
+                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-500 ring-1 ring-white" />
+                )}
+              </button>
+            )
+          })}
         </div>
-        <div className="max-h-[140px] overflow-y-auto pr-1">
-          <div className="grid grid-cols-2 gap-1.5">
-            {CATEGORIES.map((cat) => {
+
+        {/* ── SUB-CATEGORY PILLS (only if group has >1 child) ── */}
+        {subCats.length > 1 && (
+          <div className="flex gap-1 pb-2 overflow-x-auto">
+            {subCats.map((cat) => {
               const isActive = cat.id === activeCategory
-              const hasItem = selection[cat.id] !== null
+              const hasSel = selection[cat.id] !== null
               return (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => onSelectCategory(cat.id)}
                   className={cn(
-                    'relative flex items-center gap-2 rounded-md border px-2.5 py-2 text-left text-xs font-medium tracking-wide transition-all',
+                    'relative flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium tracking-wide transition-all',
                     isActive
-                      ? 'border-stone-700 bg-stone-200/80 text-stone-900 shadow-sm'
-                      : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400 hover:bg-stone-50',
+                      ? 'border-stone-700 bg-stone-700 text-white'
+                      : 'border-stone-300 bg-white text-stone-600 hover:border-stone-500',
                   )}
                 >
-                  <span className="text-base leading-none">{cat.icon}</span>
-                  <span className="flex-1 truncate">{cat.label}</span>
-                  {hasItem && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-700" aria-hidden />
+                  <span className="text-sm leading-none">{cat.icon}</span>
+                  <span>{cat.label}</span>
+                  {hasSel && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                   )}
                 </button>
               )
             })}
           </div>
-        </div>
+        )}
       </div>
 
-      {/* ====== ALIGNMENT PANEL (only shown in align mode) ====== */}
+      {/* ====== ALIGNMENT PANEL ====== */}
       {alignMode && (
+        <div className="shrink-0 border-b border-stone-200">
           <AlignmentPanel
             selectedId={selectedItemId}
             offset={currentAlignment}
@@ -104,15 +166,14 @@ export function Sidebar({
               onAlignmentChange({ ...currentAlignment, scale })
             }
           />
-        )}
+        </div>
+      )}
 
-      {/* ====== COLOR PICKER (above item grid) ====== */}
+      {/* ====== COLOR PICKER ====== */}
       {activeCat.supportsColor && (
-        <div className="shrink-0 rounded-md border border-stone-300 bg-stone-100/60 p-2">
+        <div className="shrink-0 border-b border-stone-200 bg-stone-50/60 p-2">
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">
-              Color
-            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">Color</span>
             <span className="flex items-center gap-1 text-[10px] text-stone-500">
               <span
                 className="inline-block h-3 w-3 rounded-full border border-stone-400"
@@ -144,11 +205,11 @@ export function Sidebar({
         </div>
       )}
 
-      {/* ====== ITEM GRID (mini previews, scrollable) ====== */}
-      <div className="flex min-h-0 flex-1 flex-col rounded-md border border-stone-300 bg-white p-2">
+      {/* ====== ITEM GRID ====== */}
+      <div className="flex min-h-0 flex-1 flex-col bg-white p-2">
         <div className="mb-1.5 flex items-center justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">
-            {activeCat.label} Styles
+            {activeCat.label}
           </span>
           {selectedItemId && (
             <button
@@ -163,7 +224,7 @@ export function Sidebar({
 
         <div className="min-h-0 flex-1 overflow-y-auto pr-1">
           <div className="grid grid-cols-3 gap-2">
-            {/* "None" tile — clear the category */}
+            {/* None tile */}
             <button
               type="button"
               onClick={() => onSelectItem(activeCategory, null)}
@@ -181,12 +242,7 @@ export function Sidebar({
             {items.length === 0 && (
               <div className="col-span-2 flex aspect-square flex-col items-center justify-center rounded-md border border-dashed border-stone-300 bg-stone-50/50 p-3 text-center">
                 <span className="text-2xl leading-none opacity-40">📦</span>
-                <p className="mt-2 text-[10px] font-medium tracking-wide text-stone-400">
-                  No items yet
-                </p>
-                <p className="mt-1 text-[9px] leading-tight text-stone-400">
-                  Upload your own PNG/SVG files to add to this category
-                </p>
+                <p className="mt-2 text-[10px] font-medium tracking-wide text-stone-400">No items yet</p>
               </div>
             )}
 
@@ -205,35 +261,26 @@ export function Sidebar({
                   )}
                   title={item.name}
                 >
-                  {/* Mini SVG preview */}
                   <div className="flex h-full w-full items-center justify-center">
                     <svg
                       viewBox={CANVAS_VIEWBOX}
                       className="h-full w-full"
                       preserveAspectRatio="xMidYMid meet"
                     >
-                      {/* For hair previews, we want to show just the hair color, not the body.
-                          For clothing previews, show a faint body silhouette behind so the
-                          user can see where the item sits. */}
                       {activeCategory === 'background' ? (
-                        // Background: show as full-bleed mini scene (fills entire canvas)
                         <item.Component />
                       ) : (
-                        // All non-background items: wrap in transform to scale & center body
                         <g transform={BODY_TRANSFORM}>
-                          {activeCategory !== 'hair' && (
-                            <Body />
-                          )}
+                          {activeCategory !== 'hair' && <Body />}
                           {activeCategory === 'hair' ? (
-                            // Hair: show back+front combined for preview
                             <>
                               {(() => {
-                                const HairStyle = HAIR_STYLES_LOOKUP[item.id]
-                                return HairStyle ? (
+                                const hs = HAIR_STYLES_LOOKUP[item.id]
+                                return hs ? (
                                   <>
-                                    <HairStyle.back color={activeColor} />
+                                    <hs.back color={activeColor} />
                                     <Body />
-                                    <HairStyle.front color={activeColor} />
+                                    <hs.front color={activeColor} />
                                   </>
                                 ) : null
                               })()}
@@ -248,7 +295,6 @@ export function Sidebar({
                       )}
                     </svg>
                   </div>
-                  {/* Name label */}
                   <div className="absolute bottom-0 left-0 right-0 bg-white/85 px-1 py-0.5 text-center text-[9px] font-medium tracking-wide text-stone-700 backdrop-blur-sm">
                     {item.name}
                   </div>
@@ -265,24 +311,6 @@ export function Sidebar({
       </div>
     </div>
   )
-}
-
-// Helper: lookup hair style by id (for thumbnails that combine back+front)
-import { HAIR_STYLES } from '@/lib/dressup/items'
-const HAIR_STYLES_LOOKUP = Object.fromEntries(
-  HAIR_STYLES.map((h) => [h.id, h]),
-) as Record<string, (typeof HAIR_STYLES)[number]>
-
-// Helper: produce a slightly darker trim color from a base color
-function getTrimFor(color: string): string {
-  // Simple darkening — for hex like #RRGGBB
-  if (color.startsWith('#') && color.length === 7) {
-    const r = Math.max(0, parseInt(color.slice(1, 3), 16) - 40)
-    const g = Math.max(0, parseInt(color.slice(3, 5), 16) - 40)
-    const b = Math.max(0, parseInt(color.slice(5, 7), 16) - 40)
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
-  }
-  return color
 }
 
 export default Sidebar
