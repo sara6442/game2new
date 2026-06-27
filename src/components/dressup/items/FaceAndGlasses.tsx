@@ -1,13 +1,5 @@
 'use client'
 
-/**
- * FaceAndGlasses.tsx — Glasses and eyewear.
- *
- * Layer rule:
- *   - All items render UNDER the hair front (z=5.8)
- *   - Exception: if id === 'face9', renders OVER hair front (z=6.2)
- */
-
 import React from 'react'
 
 export interface GlassesProps {
@@ -31,33 +23,17 @@ function makePngGlasses(src: string, defaultAlign = { x: 0, y: 0, scale: 1 }): R
   }
 }
 
+
 // ── Add your glasses/face accessories here ──────────────────────────────────
-export const Face1 = makePngGlasses('/face1.png', { x: 0, y: 0, scale: 1 })
-export const Face2 = makePngGlasses('/face2.png', { x: 0, y: 0, scale: 1 })
-export const Face3 = makePngGlasses('/face3.png', { x: 0, y: 0, scale: 1 })
-export const Face4 = makePngGlasses('/face4.png', { x: 0, y: 0, scale: 1 })
-export const Face5 = makePngGlasses('/face5.png', { x: 0, y: 0, scale: 1 })
-export const Face6 = makePngGlasses('/face6.png', { x: 0, y: 0, scale: 1 })
-export const Face8 = makePngGlasses('/face7.png', { x: 0, y: 0, scale: 1 })
-export const Face7 = makePngGlasses('/face8.png', { x: 8, y: 0, scale: 1 })
-export const Face9 = makePngGlasses('/face9.png', { x: 0, y: 0, scale: 1 })
 export const Glasses1 = makePngGlasses('/glasses1.png', { x: 0, y: 0, scale: 1 })
 export const Glasses2 = makePngGlasses('/glasses2.png', { x: 0, y: 0, scale: 1 })
 export const Glasses3 = makePngGlasses('/glasses3.png', { x: 0, y: 0, scale: 1 })
 
 export const GLASSES_ITEMS: GlassesItem[] = [
-  { id: 'face1', name: 'Face1', Component: Face1 },
-    { id: 'face2', name: 'Strawbbery Blush', Component: Face2 },
-  { id: 'face3', name: 'Nose Plaster', Component: Face3 },
-  { id: 'face4', name: 'Normal Blush', Component: Face4 },
-  { id: 'face5', name: 'Face Mask', Component: Face5 },
-  { id: 'face6', name: 'Star Sticker', Component: Face6 },
-  { id: 'face8', name: 'Heart Sticker', Component: Face8 },
-  { id: 'face7', name: 'Bleeding Head', Component: Face7 },
-  { id: 'face9', name: 'Black Cloud',  Component: Face9 },
   { id: 'glasses1', name: 'Round Glasses',  Component: Glasses1 },
   { id: 'glasses2', name: 'Black Sunglasses',  Component: Glasses2 },
   { id: 'glasses3', name: 'Sad Rounded',  Component: Glasses3 },
 ]
+
 
 export default GLASSES_ITEMS
