@@ -49,7 +49,7 @@ export type CategoryId =
   | 'dress'
   | 'coat'
   | 'shoe'
-  | 'sleeve'         // ✅ New: detachable sleeves
+  | 'sleeve'
   | 'decoration'
   | 'glasses'
   | 'faceAcc'
@@ -79,7 +79,7 @@ export interface CategoryGroup {
 export const CATEGORY_GROUPS: CategoryGroup[] = [
   {
     id: 'scene',
-    label: 'Background',
+    label: 'Scene',
     icon: '🏛️',
     children: ['background'],
   },
@@ -99,7 +99,13 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     id: 'clothing',
     label: 'Clothing',
     icon: '👗',
-    children: ['top', 'bottom', 'dress', 'coat', 'sleeve'],
+    children: ['top', 'bottom', 'dress'],
+  },
+  {
+    id: 'outerwear',
+    label: 'Outerwear',
+    icon: '🧥',
+    children: ['coat', 'sleeve'],
   },
   {
     id: 'neck',
@@ -114,10 +120,16 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     children: ['handDeco', 'ring', 'glove', 'bracelet'],
   },
   {
-    id: 'other',
-    label: 'Other',
-    icon: '✨',
-    children: ['shoe', 'decoration'],
+    id: 'shoes',
+    label: 'Shoes',
+    icon: '👟',
+    children: ['shoe'],
+  },
+  {
+    id: 'decorations',
+    label: 'Decorations',
+    icon: '🌷',
+    children: ['decoration'],
   },
 ]
  
@@ -138,6 +150,8 @@ export const CATEGORIES: Category[] = [
   { id: 'top', label: 'Tops', icon: '👚', supportsColor: false, palette: [] },
   { id: 'bottom', label: 'Bottoms', icon: '👖', supportsColor: false, palette: [] },
   { id: 'dress', label: 'Dresses', icon: '👗', supportsColor: false, palette: [] },
+  
+  // ── Outerwear ──────────────────────────────────────────────────────────────
   { id: 'coat', label: 'Coats', icon: '🧥', supportsColor: false, palette: [] },
   { id: 'sleeve', label: 'Sleeves', icon: '💪', supportsColor: false, palette: [] },
   
@@ -150,8 +164,10 @@ export const CATEGORIES: Category[] = [
   { id: 'glove', label: 'Gloves', icon: '🧤', supportsColor: false, palette: [] },
   { id: 'bracelet', label: 'Bracelets', icon: '📿', supportsColor: false, palette: [] },
   
-  // ── Other ──────────────────────────────────────────────────────────────────
+  // ── Shoes ──────────────────────────────────────────────────────────────────
   { id: 'shoe', label: 'Shoes', icon: '👟', supportsColor: false, palette: [] },
+  
+  // ── Decorations ──────────────────────────────────────────────────────────────
   { id: 'decoration', label: 'Decorations', icon: '🌷', supportsColor: false, palette: [] },
 ]
 
