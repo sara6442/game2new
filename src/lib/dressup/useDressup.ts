@@ -261,33 +261,51 @@ export function useDressup() {
     setColors(DEFAULT_COLORS)
   }, [])
  
-  const getCurrentAlignment = useCallback((): AlignmentValues => {
-    const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
-    if (!selectedId) return { x: 0, y: 0, scale: 1 }
-    return alignments[selectedId] ?? { x: 0, y: 0, scale: 1 }
-  }, [selection, activeCategory, alignments])
- 
-  const setCurrentAlignment = useCallback(
-    (values: AlignmentValues) => {
-      const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
-      if (!selectedId) return
-      setAlignments((prev) => {
-        // ✅ Preserve existing values, only update the one being modified
-        return { ...prev, [selectedId]: values }
-      })
-    },
-    [selection, activeCategory],
-  )
- 
-  const resetCurrentAlignment = useCallback(() => {
+ const getCurrentAlignment = useCallback((): AlignmentValues => {
+  const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
+  if (!selectedId) return { x: 0, y: 0, scale: 1 }
+  
+  // ✅ Check if alignment exists for this specific item
+  const alignment = alignments[selectedId]
+  if (alignment) {
+    return alignment
+  }
+  
+  // ✅ If no alignment saved, check if the item has a default alignment baked in
+  // (This would require looking up the item's default from its component)
+  return { x: 0, y: 0, scale: 1 }
+}, [selection, activeCategory, alignments])
+
+const setCurrentAlignment = useCallback(
+  (values: AlignmentValues) => {
     const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
     if (!selectedId) return
+    
     setAlignments((prev) => {
-      const next = { ...prev }
-      delete next[selectedId]
-      return next
+      // ✅ Only update if values actually changed (prevents unnecessary re-renders)
+      const current = prev[selectedId]
+      if (current && 
+          current.x === values.x && 
+          current.y === values.y && 
+          current.scale === values.scale) {
+        return prev // No change needed
+      }
+      return { ...prev, [selectedId]: values }
     })
-  }, [selection, activeCategory])
+  },
+  [selection, activeCategory],
+)
+
+const resetCurrentAlignment = useCallback(() => {
+  const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
+  if (!selectedId) return
+  
+  setAlignments((prev) => {
+    const next = { ...prev }
+    delete next[selectedId]
+    return next
+  })
+}, [selection, activeCategory])
  
   return {
     selection,
