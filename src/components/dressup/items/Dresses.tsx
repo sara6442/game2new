@@ -21,7 +21,7 @@ function makePngDress(src: string, defaultAlign: DressAlignment = { x: 0, y: 0, 
 
 export const Dress1: React.FC<ClothProps> = makePngDress('/dress1.png', { x: 31, y: 54, scale: 0.8 })
 export const Dress2: React.FC<ClothProps> = makePngDress('/dress2.png', { x: -22, y: -41, scale: 1.10 })
-export const Dress3: React.FC<ClothProps> = makePngDress('/dress3.png', { x: -6, y: 212, scale: 1.05 })
+export const Dress3: React.FC<ClothProps> = makePngDress('/dress3.png', { x: -49, y: -273, scale: 1.27 })
 export const Dress4: React.FC<ClothProps> = makePngDress('/dress4.png', { x: -133, y: -334, scale: 1.74 })
 export const Dress5: React.FC<ClothProps> = makePngDress('/dress5.png', { x: 8, y: 4, scale: 0.95 })
 export const Dress6: React.FC<ClothProps> = makePngDress('/dress6.png', { x: -41, y: -147, scale: 1.25 })
@@ -31,12 +31,14 @@ export const Dress9: React.FC<ClothProps> = makePngDress('/dress9.png', { x: 0, 
 export const Dress10: React.FC<ClothProps> = makePngDress('/dress10.png', { x: 4, y: 37, scale: 0.99 })
 export const Dress11: React.FC<ClothProps> = makePngDress('/dress11.png', { x: -141, y: -45, scale: 1.87 })
 export const Dress12: React.FC<ClothProps> = makePngDress('/dress12.png', { x: -7, y: 55, scale: 1.04 })
-export const Dress13: React.FC<ClothProps> = makePngDress('/dress13.png', { x: -69, y: -13, scale: 1.42 })
-export const Dress14: React.FC<ClothProps> = makePngDress('/dress14.png', { x: -110, y: -31, scale: 1.7 })
+export const Dress13: React.FC<ClothProps> = makePngDress('/dress13.png', { x: -4, y: -151, scale: 1 })
+export const Dress14: React.FC<ClothProps> = makePngDress('/dress14.png', { x: -4, y: -133, scale: 1 })
 export const Dress15: React.FC<ClothProps> = makePngDress('/dress15.png', { x: 17, y: 43, scale: 0.89 })
 export const Dress16: React.FC<ClothProps> = makePngDress('/dress16.png', { x: -7, y: 34, scale: 1.04 })
-export const Dress17: React.FC<ClothProps> = makePngDress('/dress17.png', { x: -2, y: 15, scale: 1 })
+export const Dress17: React.FC<ClothProps> = makePngDress('/dress17.png', { x: 2, y: -15, scale: 1 })
 export const Dress18: React.FC<ClothProps> = makePngDress('/dress18.png', { x: 31, y: 48, scale: 0.8 })
+export const Dress19: React.FC<ClothProps> = makePngDress('/dress1.png', { x: 31, y: 48, scale: 0.8 })
+
 
 export interface DressItem {
   id: string
@@ -64,6 +66,7 @@ export const DRESS_ITEMS: DressItem[] = [
   { id: 'dress16', name: 'Green Victorian', Component: Dress16, sleeveLength: 'long' },
   { id: 'dress17', name: 'White Dress', Component: Dress17, sleeveLength: 'short' },
   { id: 'dress18', name: 'Yellow Floral', Component: Dress18, sleeveLength: 'short' },
+  { id: 'dress18', name: 'Graduated Princess', Component: Dress18, sleeveLength: 'short' },
 ]
 
 export default DRESS_ITEMS
