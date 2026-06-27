@@ -56,17 +56,17 @@ const NoopBack: React.FC<HairProps> = () => null
 /* Hairstyles 2–10 — with user-adjusted alignment values              */
 /* (hair1 removed by user request)                                     */
 /* ------------------------------------------------------------------ */
-const Hair1Front  = makePngHair('/hair1.png',  { x: -16, y:  -80, scale: 1.10 })
+const Hair1Front  = makePngHair('/hair1.png',  { x: 16, y: -90, scale: 1.03 })
 const Hair2Front  = makePngHair('/hair2.png',  { x: -16, y:  -80, scale: 1.10 })
-const Hair3Front  = makePngHair('/hair3.png',  { x: -12, y:  -46, scale: 1 })
-const Hair4Front  = makePngHair('/hair4.png',  { x:   5, y:  -53, scale: 1.05 })
+const Hair3Front  = makePngHair('/hair3.png',  { x: -8, y: -54, scale: 1 })
+const Hair4Front  = makePngHair('/hair4.png',  { x: -11, y: -45, scale: 1 })
 const Hair5Front  = makePngHair('/hair5.png',  { x:   9, y:  -67, scale: 1.05 })
 const Hair6Front  = makePngHair('/hair6.png',  { x:  -4, y:  -61, scale: 1.00 })
-const Hair7Front  = makePngHair('/hair7.png',  { x: -52, y: -133, scale: 1.25 })
+const Hair7Front  = makePngHair('/hair7.png',  { x: -43, y: -70, scale: 1.23 })
 const Hair8Front  = makePngHair('/hair8.png',  { x:  -5, y:  -79, scale: 1.10 })
 const Hair9Front  = makePngHair('/hair9.png',  { x: -38, y:  -68, scale: 1.15 })
 const Hair10Front = makePngHair('/hair10.png', { x:  22, y:  -96, scale: 1.00 })
-const Hair11Front = makePngHair('/hair11.png', { x:  22, y:  -96, scale: 1.00 })
+const Hair11Front = makePngHair('/hair11.png', { x: 5, y: -192, scale: 1.5 })
 
 /* ------------------------------------------------------------------ */
 /* Registry                                                          */
