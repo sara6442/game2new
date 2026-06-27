@@ -1,40 +1,4 @@
-Let me check those two things first.
 
-Found both bugs. Let me check the full picture:
-
-Both bugs are just wrong filenames in the code. Here are the exact fixes:
-
----
-
-**`src/components/dressup/items/FaceAndGlasses.tsx` — Line 43**
-
-```ts
-// WRONG (file doesn't exist):
-export const Face9 = makePngGlasses('/face9.png', ...)
-
-// FIX:
-export const Face9 = makePngGlasses('/face9(top).png', { x: 0, y: 0, scale: 1 })
-```
-
----
-
-**`src/components/dressup/items/Dresses.tsx` — Line 40**
-
-```ts
-// WRONG (file doesn't exist):
-export const Dress19 = makePngDress('/dress19.png', ...)
-
-// FIX:
-export const Dress19 = makePngDress('/dress19M.png', { x: 31, y: 48, scale: 0.8 })
-```
-
-Just the PNG filename in each line — everything else stays the same.
-
----
-
-Now here's the full `useDressup.ts`:
-
-```ts
 'use client'
 
 /**
@@ -276,4 +240,3 @@ export function useDressup() {
 }
 
 export type UseDressupReturn = ReturnType<typeof useDressup>
-```
