@@ -13,6 +13,7 @@
  *   z=3.2  Gloves NON-FLUFFY (under long sleeves)
  *   z=3.3  Bracelets (under gloves)
  *   z=4    Top / z=5 Dress  ← long sleeves cover non-fluffy hand items
+ *   z=4.5  Sleeves (detachable sleeves, only with short sleeves)
  *   z=5.5  Coat (over everything except dress19)
  *   z=5.6  Gloves FLUFFY (above long sleeves)
  *   z=5.7  Necklace
@@ -36,6 +37,7 @@ import {
   COAT_ITEMS,
   BACKGROUND_ITEMS,
   SHOE_ITEMS,
+  SLEEVE_ITEMS,
   DECORATION_ITEMS,
   GLASSES_ITEMS,
   FACE_ACC_ITEMS,
@@ -61,6 +63,7 @@ interface StageCanvasProps {
     dress:       string | null
     coat:        string | null
     shoe:        string | null
+    sleeve:      string | null
     decoration:  string | null
     glasses:     string | null
     faceAcc:     string | null
@@ -91,6 +94,7 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   const DressComp       = DRESS_ITEMS.find((d) => d.id === selection.dress)?.Component
   const CoatComp        = COAT_ITEMS.find((c) => c.id === selection.coat)?.Component
   const ShoeComp        = SHOE_ITEMS.find((s) => s.id === selection.shoe)?.Component
+  const SleeveComp      = SLEEVE_ITEMS.find((s) => s.id === selection.sleeve)?.Component
   const DecorationComp  = DECORATION_ITEMS.find((d) => d.id === selection.decoration)?.Component
   const GlassesComp     = GLASSES_ITEMS.find((g) => g.id === selection.glasses)?.Component
   const FaceAccComp     = FACE_ACC_ITEMS.find((f) => f.id === selection.faceAcc)?.Component
@@ -192,6 +196,11 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
         {/* z=5: DRESS (except dress19) */}
         {selection.dress && !isDress19 && DressComp && wrapAlign('dress', selection.dress,
           <DressComp color={colors.dress} />
+        )}
+
+        {/* z=4.5: SLEEVES — detachable sleeves, only with short sleeves */}
+        {SleeveComp && wrapAlign('sleeve', selection.sleeve,
+          <SleeveComp color={colors.sleeve} />
         )}
 
         {/* z=5.5: COAT — over everything except dress19 */}
