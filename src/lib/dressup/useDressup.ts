@@ -3,6 +3,11 @@
 /**
  * useDressup.ts — Client state for the dress-up game.
  *
+ * Categories:
+ *  - background, hair, top, bottom, dress, coat, shoe, decoration
+ *  - glasses, faceAcc, hairAcc, hat
+ *  - handDeco, ring, glove, bracelet, necklace
+ *
  * Rules:
  *  - hat and hairAcc are mutually exclusive
  *  - glasses and faceAcc are independent
@@ -26,7 +31,6 @@ interface DressupState {
   dress:       string | null
   coat:        string | null
   shoe:        string | null
-  accessory:   string | null
   decoration:  string | null
   glasses:     string | null
   faceAcc:     string | null
@@ -47,7 +51,6 @@ interface ColorState {
   dress:       string
   coat:        string
   shoe:        string
-  accessory:   string
   decoration:  string
   glasses:     string
   faceAcc:     string
@@ -73,8 +76,7 @@ const DEFAULT_COLORS: ColorState = {
   bottom:      '#2C2C3E',
   dress:       '#6B2737',
   coat:        '#3A2418',
-  shoe:        '#3A2418',
-  accessory:   '#C19A6B',
+  shoe:        '#2C2C2C',
   decoration:  '#A8D888',
   glasses:     '#2C2C2C',
   faceAcc:     '#C19A6B',
@@ -95,7 +97,6 @@ const DEFAULT_STATE: DressupState = {
   dress:       null,
   coat:        null,
   shoe:        null,
-  accessory:   null,
   decoration:  null,
   glasses:     null,
   faceAcc:     null,
@@ -179,8 +180,8 @@ export function useDressup() {
         next.hat     = null
  
       } else {
-        // glasses, faceAcc, handDeco, ring, glove, bracelet,
-        // necklace, shoe, accessory, decoration, hair, background
+        // All other categories: glasses, faceAcc, handDeco, ring, glove, bracelet,
+        // necklace, shoe, decoration, hair, background
         ;(next as unknown as Record<string, string | null>)[categoryId] = itemId
       }
  
@@ -252,4 +253,3 @@ export function useDressup() {
 }
  
 export type UseDressupReturn = ReturnType<typeof useDressup>
- 
