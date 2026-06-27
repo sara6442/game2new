@@ -37,7 +37,7 @@ export const Dress15: React.FC<ClothProps> = makePngDress('/dress15.png', { x: 1
 export const Dress16: React.FC<ClothProps> = makePngDress('/dress16.png', { x: -7, y: 34, scale: 1.04 })
 export const Dress17: React.FC<ClothProps> = makePngDress('/dress17.png', { x: 2, y: -15, scale: 1 })
 export const Dress18: React.FC<ClothProps> = makePngDress('/dress18.png', { x: 31, y: 48, scale: 0.8 })
-export const Dress19: React.FC<ClothProps> = makePngDress('/dress1.png', { x: 31, y: 48, scale: 0.8 })
+export const Dress19: React.FC<ClothProps> = makePngDress('/dress19.png', { x: 31, y: 48, scale: 0.8 })
 
 
 export interface DressItem {
