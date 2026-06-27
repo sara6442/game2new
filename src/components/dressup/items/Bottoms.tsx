@@ -15,26 +15,18 @@ export interface ClothProps {
   align?: { x: number; y: number; scale: number }
 }
 
-function makePngBottom(src: string, defaultY = 0): React.FC<ClothProps> {
+interface BottomAlignment { x: number; y: number; scale: number }
+
+function makePngBottom(src: string, defaultAlign: BottomAlignment = { x: 0, y: 0, scale: 1 }): React.FC<ClothProps> {
   return function PngBottom({ align }: ClothProps) {
-    const x = align?.x ?? 0
-    const y = align?.y ?? defaultY
-    const scale = align?.scale ?? 1
+    const { x, y, scale } = align ?? defaultAlign
     return (
       <g transform={`translate(${x}, ${y}) scale(${scale})`}>
-        <image
-          href={src}
-          x={0}
-          y={0}
-          width={325}
-          height={742}
-          preserveAspectRatio="xMidYMid meet"
-        />
+        <image href={src} x={0} y={0} width={325} height={742} preserveAspectRatio="xMidYMid meet" />
       </g>
     )
   }
 }
-
 
 /* ------------------------------------------------------------------ */
 /* Bottoms 1–21                                                        */
