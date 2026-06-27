@@ -7,7 +7,7 @@
  *   z=0    Background
  *   z=1    Hair back
  *   z=2    Body (bra or no-bra)
- *   z=3.1  Hand decorations (nails, henna)
+ *   z=3.1  Hand decorations (nails, henna) — EXCEPT dec1
  *   z=3.15 Rings
  *   z=3.2  Gloves NON-FLUFFY (under long sleeves)
  *   z=3.3  Bracelets
@@ -23,7 +23,8 @@
  *   z=7    Shoes
  *   z=8    Accessories
  *   z=9    Decorations
- *   z=9.9  face9 — black cloud, covers EVERYTHING including hair, hats, and all other items
+ *   z=9.5  dec1 (Rolling Pin) — on top of everything except face9
+ *   z=9.9  face9 — black cloud, covers EVERYTHING including dec1
  */
 
 import { Body } from './items/Body'
@@ -112,6 +113,9 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   // Glove fluffy check
   const gloveFluffy = isGloveFluffy(selection.glove)
 
+  // ✅ dec1 (Rolling Pin) - render on top of everything
+  const isDec1 = selection.handDeco === 'dec1'
+  
   // ✅ face9 = black cloud = renders above EVERYTHING
   const isFace9 = selection.faceAcc === 'face9'
 
@@ -154,8 +158,8 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
         {/* z=2: BODY */}
         <Body src={bodySrc} />
 
-        {/* z=3.1: HAND DECORATIONS — nails, henna */}
-        {HandDecoComp && wrapAlign('handDeco', selection.handDeco,
+        {/* z=3.1: HAND DECORATIONS — nails, henna (EXCEPT dec1 which is rendered at top) */}
+        {HandDecoComp && !isDec1 && wrapAlign('handDeco', selection.handDeco,
           <HandDecoComp align={undefined} />
         )}
 
@@ -209,7 +213,7 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
           <GlassesComp align={undefined} />
         )}
 
-        {/* z=5.85: FACE ACC 1-8 — under hair front (face9 is handled at the very top) */}
+        {/* z=5.85: FACE ACC 1-8 — under hair front */}
         {FaceAccComp && !isFace9 && wrapAlign('faceAcc', selection.faceAcc,
           <FaceAccComp align={undefined} />
         )}
@@ -244,7 +248,12 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
           <DecorationComp />
         )}
 
-        {/* 🎯 z=9.9: face9 BLACK CLOUD — above EVERYTHING including hair, hats, accessories, decorations */}
+        {/* 🎯 z=9.5: dec1 (Rolling Pin) — on top of everything except face9 */}
+        {HandDecoComp && isDec1 && wrapAlign('handDeco', selection.handDeco,
+          <HandDecoComp align={undefined} />
+        )}
+
+        {/* 🎯 z=9.9: face9 BLACK CLOUD — above EVERYTHING including dec1 */}
         {FaceAccComp && isFace9 && wrapAlign('faceAcc', selection.faceAcc,
           <FaceAccComp align={undefined} />
         )}
