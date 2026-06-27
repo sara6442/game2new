@@ -2,15 +2,6 @@
 
 /**
  * Sidebar.tsx — Right-side control panel with grouped categories.
- *
- * Layout:
- *   ┌──────────────────────────┐
- *   │  Group tabs              │  ← Hair / Face / Clothing / Hands / etc.
- *   ├──────────────────────────┤
- *   │  Sub-category pills      │  ← e.g. under Hair: Styles | Accessories | Hats
- *   ├──────────────────────────┤
- *   │  Item grid (mini previews)│
- *   └──────────────────────────┘
  */
 
 import { useState } from 'react'
@@ -40,7 +31,6 @@ interface SidebarProps {
   onAlignmentReset: () => void
 }
 
-// Helper: produce a slightly darker trim color
 function getTrimFor(color: string): string {
   if (color.startsWith('#') && color.length === 7) {
     const r = Math.max(0, parseInt(color.slice(1, 3), 16) - 40)
@@ -67,20 +57,19 @@ export function Sidebar({
   onAlignmentChange,
   onAlignmentReset,
 }: SidebarProps) {
-  // Find which group owns the current activeCategory
   const activeGroup = CATEGORY_GROUPS.find((g) => g.children.includes(activeCategory))
   const [openGroupId, setOpenGroupId] = useState<string>(activeGroup?.id ?? CATEGORY_GROUPS[0].id)
 
   const currentGroup = CATEGORY_GROUPS.find((g) => g.id === openGroupId) ?? CATEGORY_GROUPS[0]
-  // Sub-categories visible in current group
-  const subCats = currentGroup.children.map((id) => CATEGORIES.find((c) => c.id === id)!).filter(Boolean)
+  const subCats = currentGroup.children
+    .map((id) => CATEGORIES.find((c) => c.id === id)!)
+    .filter(Boolean)
 
   const activeCat = CATEGORIES.find((c) => c.id === activeCategory)!
   const items = ITEMS_BY_CATEGORY[activeCategory] ?? []
   const selectedItemId = selection[activeCategory]
   const activeColor = colors[activeCategory]
 
-  // Does any child of a group have a selection?
   const groupHasSelection = (groupId: string) => {
     const group = CATEGORY_GROUPS.find((g) => g.id === groupId)
     return group?.children.some((id) => selection[id] !== null) ?? false
@@ -89,7 +78,7 @@ export function Sidebar({
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
 
-      {/* ====== GROUP TABS ====== */}
+      {/* ── GROUP TABS ── */}
       <div className="shrink-0 border-b border-stone-200 bg-stone-50 px-2 pt-2">
         <div className="flex flex-wrap gap-1 pb-2">
           {CATEGORY_GROUPS.map((group) => {
@@ -101,7 +90,6 @@ export function Sidebar({
                 type="button"
                 onClick={() => {
                   setOpenGroupId(group.id)
-                  // Auto-select first child if current activeCategory not in this group
                   if (!group.children.includes(activeCategory)) {
                     onSelectCategory(group.children[0])
                   }
@@ -123,7 +111,7 @@ export function Sidebar({
           })}
         </div>
 
-        {/* ── SUB-CATEGORY PILLS (only if group has >1 child) ── */}
+        {/* ── SUB-CATEGORY PILLS ── */}
         {subCats.length > 1 && (
           <div className="flex gap-1 pb-2 overflow-x-auto">
             {subCats.map((cat) => {
@@ -153,14 +141,18 @@ export function Sidebar({
         )}
       </div>
 
-      {/* ====== ALIGNMENT PANEL ====== */}
+      {/* ── ALIGNMENT PANEL ── */}
       {alignMode && (
         <div className="shrink-0 border-b border-stone-200">
           <AlignmentPanel
             selectedId={selectedItemId}
             offset={currentAlignment}
             onNudge={(dx, dy) =>
-              onAlignmentChange({ ...currentAlignment, x: currentAlignment.x + dx, y: currentAlignment.y + dy })
+              onAlignmentChange({
+                ...currentAlignment,
+                x: currentAlignment.x + dx,
+                y: currentAlignment.y + dy,
+              })
             }
             onScaleChange={(scale) =>
               onAlignmentChange({ ...currentAlignment, scale })
@@ -169,7 +161,7 @@ export function Sidebar({
         </div>
       )}
 
-      {/* ====== COLOR PICKER ====== */}
+      {/* ── COLOR PICKER ── */}
       {activeCat.supportsColor && (
         <div className="shrink-0 border-b border-stone-200 bg-stone-50/60 p-2">
           <div className="mb-1.5 flex items-center justify-between">
@@ -205,7 +197,7 @@ export function Sidebar({
         </div>
       )}
 
-      {/* ====== ITEM GRID ====== */}
+      {/* ── ITEM GRID ── */}
       <div className="flex min-h-0 flex-1 flex-col bg-white p-2">
         <div className="mb-1.5 flex items-center justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">
@@ -224,6 +216,7 @@ export function Sidebar({
 
         <div className="min-h-0 flex-1 overflow-y-auto pr-1">
           <div className="grid grid-cols-3 gap-2">
+
             {/* None tile */}
             <button
               type="button"
@@ -271,7 +264,8 @@ export function Sidebar({
                         <item.Component />
                       ) : (
                         <g transform={BODY_TRANSFORM}>
-                          {activeCategory !== 'hair' && <Body />}
+                          {/* Body in previews always uses the default bra body */}
+                          {activeCategory !== 'hair' && <Body src="/Body-H-B.png" />}
                           {activeCategory === 'hair' ? (
                             <>
                               {(() => {
@@ -279,7 +273,7 @@ export function Sidebar({
                                 return hs ? (
                                   <>
                                     <hs.back color={activeColor} />
-                                    <Body />
+                                    <Body src="/Body-H-B.png" />
                                     <hs.front color={activeColor} />
                                   </>
                                 ) : null
