@@ -28,7 +28,6 @@
  *   z=9.9  face9 — black cloud, covers EVERYTHING
  */
 
-import React from 'react'
 import { Body } from './items/Body'
 import {
   HAIR_STYLES,
@@ -127,12 +126,15 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
 
   // ✅ Get alignment for an item (alignOverride > saved alignment > undefined)
   const getAlignment = (category: CategoryId, itemId: string | null): AlignmentValues | undefined => {
+    // 1. Check alignOverride (align mode)
     if (alignOverride && alignOverride.category === category) {
       return alignOverride.values
     }
+    // 2. Check saved alignment
     if (itemId && alignments[itemId]) {
       return alignments[itemId]
     }
+    // 3. Return undefined - component will use its default
     return undefined
   }
 
