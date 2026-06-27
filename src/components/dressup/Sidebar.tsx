@@ -161,6 +161,7 @@ export function Sidebar({
                 scale: scale, // ✅ Preserve x and y
               })
             }
+              onReset={onAlignmentReset} // ✅ Pass the reset function
           />
         </div>
       )}
