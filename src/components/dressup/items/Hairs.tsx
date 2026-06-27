@@ -58,7 +58,7 @@ const NoopBack: React.FC<HairProps> = () => null
 /* ------------------------------------------------------------------ */
 const Hair1Front  = makePngHair('/hair1.png',  { x: -16, y:  -80, scale: 1.10 })
 const Hair2Front  = makePngHair('/hair2.png',  { x: -16, y:  -80, scale: 1.10 })
-const Hair3Front  = makePngHair('/hair3.png',  { x: -12, y:  -46, scale: 1 }
+const Hair3Front  = makePngHair('/hair3.png',  { x: -12, y:  -46, scale: 1 })
 const Hair4Front  = makePngHair('/hair4.png',  { x:   5, y:  -53, scale: 1.05 })
 const Hair5Front  = makePngHair('/hair5.png',  { x:   9, y:  -67, scale: 1.05 })
 const Hair6Front  = makePngHair('/hair6.png',  { x:  -4, y:  -61, scale: 1.00 })
