@@ -149,13 +149,17 @@ export function Sidebar({
             offset={currentAlignment}
             onNudge={(dx, dy) =>
               onAlignmentChange({
-                ...currentAlignment,
                 x: currentAlignment.x + dx,
                 y: currentAlignment.y + dy,
+                scale: currentAlignment.scale, // ✅ Preserve scale
               })
             }
             onScaleChange={(scale) =>
-              onAlignmentChange({ ...currentAlignment, scale })
+              onAlignmentChange({
+                x: currentAlignment.x,
+                y: currentAlignment.y,
+                scale: scale, // ✅ Preserve x and y
+              })
             }
           />
         </div>
