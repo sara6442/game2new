@@ -1,24 +1,23 @@
-
 'use client'
-
+ 
 /**
  * useDressup.ts — Client state for the dress-up game.
  *
- * Category rules:
- *  - hat and hairAcc are mutually exclusive (selecting one clears the other)
- *  - glasses and faceAcc are independent (can both be worn)
- *  - handDeco → ring → glove → bracelet are all independent (stack together)
- *  - glove fluffy flag: fluffy gloves render ABOVE long sleeves; non-fluffy UNDER
+ * Rules:
+ *  - hat and hairAcc are mutually exclusive
+ *  - glasses and faceAcc are independent
+ *  - handDeco → ring → glove → bracelet all stack independently
+ *  - fluffy gloves render ABOVE long sleeves; non-fluffy UNDER
  *  - necklace is fully independent
  *  - coat always layers in front — no sleeve restriction
  */
-
+ 
 import { useCallback, useState } from 'react'
-import { CATEGORIES, TOP_ITEMS, DRESS_ITEMS, GLOVE_ITEMS, type CategoryId } from './items'
-
+import { CATEGORIES, GLOVE_ITEMS, type CategoryId } from './items'
+ 
 export const DEFAULT_TOP_ID    = 'top4'
 export const DEFAULT_BOTTOM_ID = 'bottom8'
-
+ 
 interface DressupState {
   background:  string | null
   hair:        string | null
@@ -29,17 +28,17 @@ interface DressupState {
   shoe:        string | null
   accessory:   string | null
   decoration:  string | null
-  glasses:     string | null   // glasses — under hair (face9 is over)
-  faceAcc:     string | null   // face accessories — under hair (face9 is over)
-  hairAcc:     string | null   // hair clips/pins — mutually exclusive with hat
-  hat:         string | null   // hats — mutually exclusive with hairAcc
-  handDeco:    string | null   // nails, henna — lowest hand layer
-  ring:        string | null   // rings — above nails, under gloves
-  glove:       string | null   // gloves — fluffy=above sleeves, non-fluffy=under
-  bracelet:    string | null   // bracelets — above gloves
-  necklace:    string | null   // necklaces — separate neck layer
+  glasses:     string | null
+  faceAcc:     string | null
+  hairAcc:     string | null
+  hat:         string | null
+  handDeco:    string | null
+  ring:        string | null
+  glove:       string | null
+  bracelet:    string | null
+  necklace:    string | null
 }
-
+ 
 interface ColorState {
   background:  string
   hair:        string
@@ -60,13 +59,13 @@ interface ColorState {
   bracelet:    string
   necklace:    string
 }
-
+ 
 export interface AlignmentValues {
   x: number
   y: number
   scale: number
 }
-
+ 
 const DEFAULT_COLORS: ColorState = {
   background:  '#E8DCC8',
   hair:        '#3A2418',
@@ -87,7 +86,7 @@ const DEFAULT_COLORS: ColorState = {
   bracelet:    '#C19A6B',
   necklace:    '#C0A060',
 }
-
+ 
 const DEFAULT_STATE: DressupState = {
   background:  'white',
   hair:        null,
@@ -108,26 +107,34 @@ const DEFAULT_STATE: DressupState = {
   bracelet:    null,
   necklace:    null,
 }
-
-/** Returns true if the selected glove is fluffy (renders above long sleeves) */
+ 
+/**
+ * Returns true if the selected glove is fluffy.
+ * Fluffy gloves render ABOVE long sleeves (always visible).
+ * Non-fluffy gloves render UNDER long sleeves.
+ *
+ * To mark a glove as fluffy, add fluffy: true to its item definition,
+ * OR include 'fluffy' in its id string.
+ */
 export function isGloveFluffy(gloveId: string | null): boolean {
   if (!gloveId) return false
-  const glove = GLOVE_ITEMS.find((g) => g.id === gloveId)
-  return !!(glove as { fluffy?: boolean } & typeof glove)?.fluffy
-    || gloveId.includes('fluffy')
+  const glove = GLOVE_ITEMS.find((g) => g.id === gloveId) as
+    | ({ fluffy?: boolean } & (typeof GLOVE_ITEMS)[number])
+    | undefined
+  return glove?.fluffy === true || gloveId.includes('fluffy')
 }
-
+ 
 export function useDressup() {
   const [selection, setSelection] = useState<DressupState>(DEFAULT_STATE)
   const [colors, setColors]       = useState<ColorState>(DEFAULT_COLORS)
   const [activeCategory, setActiveCategory] = useState<CategoryId>('background')
   const [alignMode, setAlignMode] = useState(false)
   const [alignments, setAlignments] = useState<Record<string, AlignmentValues>>({})
-
+ 
   const selectItem = useCallback((categoryId: CategoryId, itemId: string | null) => {
     setSelection((prev) => {
       const next = { ...prev }
-
+ 
       if (categoryId === 'dress') {
         if (itemId !== null) {
           next.dress  = itemId
@@ -138,7 +145,7 @@ export function useDressup() {
           next.top    = DEFAULT_TOP_ID
           next.bottom = DEFAULT_BOTTOM_ID
         }
-
+ 
       } else if (categoryId === 'top') {
         if (prev.dress) {
           next.dress  = null
@@ -147,7 +154,7 @@ export function useDressup() {
         } else {
           next.top = itemId ?? DEFAULT_TOP_ID
         }
-
+ 
       } else if (categoryId === 'bottom') {
         if (prev.dress) {
           next.dress  = null
@@ -156,51 +163,56 @@ export function useDressup() {
         } else {
           next.bottom = itemId ?? DEFAULT_BOTTOM_ID
         }
-
+ 
       } else if (categoryId === 'coat') {
+        // Coat always layers in front — no sleeve restriction
         next.coat = itemId
-
+ 
       } else if (categoryId === 'hat') {
+        // Hat and hairAcc are mutually exclusive
         next.hat     = itemId
         next.hairAcc = null
-
+ 
       } else if (categoryId === 'hairAcc') {
+        // HairAcc and hat are mutually exclusive
         next.hairAcc = itemId
         next.hat     = null
-
+ 
       } else {
+        // glasses, faceAcc, handDeco, ring, glove, bracelet,
+        // necklace, shoe, accessory, decoration, hair, background
         ;(next as unknown as Record<string, string | null>)[categoryId] = itemId
       }
-
+ 
       return next
     })
   }, [])
-
+ 
   const setColor = useCallback((categoryId: CategoryId, color: string) => {
     setColors((prev) => ({ ...prev, [categoryId]: color }))
   }, [])
-
+ 
   const getRandomColorFor = useCallback((categoryId: CategoryId) => {
     const cat = CATEGORIES.find((c) => c.id === categoryId)
     if (!cat || !cat.supportsColor) return null
     return cat.palette[Math.floor(Math.random() * cat.palette.length)]
   }, [])
-
+ 
   const randomize = useCallback(() => {
     setSelection(DEFAULT_STATE)
   }, [])
-
+ 
   const reset = useCallback(() => {
     setSelection(DEFAULT_STATE)
     setColors(DEFAULT_COLORS)
   }, [])
-
+ 
   const getCurrentAlignment = useCallback((): AlignmentValues => {
     const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
     if (!selectedId) return { x: 0, y: 0, scale: 1 }
     return alignments[selectedId] ?? { x: 0, y: 0, scale: 1 }
   }, [selection, activeCategory, alignments])
-
+ 
   const setCurrentAlignment = useCallback(
     (values: AlignmentValues) => {
       const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
@@ -209,7 +221,7 @@ export function useDressup() {
     },
     [selection, activeCategory],
   )
-
+ 
   const resetCurrentAlignment = useCallback(() => {
     const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
     if (!selectedId) return
@@ -219,7 +231,7 @@ export function useDressup() {
       return next
     })
   }, [selection, activeCategory])
-
+ 
   return {
     selection,
     colors,
@@ -238,5 +250,6 @@ export function useDressup() {
     resetCurrentAlignment,
   }
 }
-
+ 
 export type UseDressupReturn = ReturnType<typeof useDressup>
+ 
