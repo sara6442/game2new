@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Offset {
   x: number
@@ -16,6 +16,19 @@ interface AlignmentPanelProps {
 }
 
 export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleChange }: AlignmentPanelProps) {
+  // ✅ Local state to track values without losing precision
+  const [localOffset, setLocalOffset] = useState<Offset>(offset)
+
+  // ✅ Update local state when offset prop changes (from parent)
+  useEffect(() => {
+    setLocalOffset(offset)
+  }, [offset])
+
+  // ✅ Also update when selectedId changes (new item selected)
+  useEffect(() => {
+    setLocalOffset(offset)
+  }, [selectedId, offset])
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (!selectedId) return
@@ -31,7 +44,7 @@ export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleCha
 
   const copyValues = () => {
     if (!selectedId) return
-    const text = `// ${selectedId}: { x: ${offset.x}, y: ${offset.y}, scale: ${offset.scale} }`
+    const text = `// ${selectedId}: { x: ${localOffset.x}, y: ${localOffset.y}, scale: ${localOffset.scale} }`
     navigator.clipboard.writeText(text)
   }
 
@@ -44,8 +57,8 @@ export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleCha
       {/* Live values display */}
       <div className="text-xs font-mono bg-gray-100 rounded p-2 leading-5">
         <div className="font-semibold truncate">{selectedId}</div>
-        <div>x: <span className="text-blue-600">{offset.x}</span> &nbsp; y: <span className="text-blue-600">{offset.y}</span></div>
-        <div>scale: <span className="text-purple-600">{offset.scale.toFixed(2)}</span></div>
+        <div>x: <span className="text-blue-600">{localOffset.x}</span> &nbsp; y: <span className="text-blue-600">{localOffset.y}</span></div>
+        <div>scale: <span className="text-purple-600">{localOffset.scale.toFixed(2)}</span></div>
       </div>
 
       {/* Arrow buttons */}
@@ -72,8 +85,12 @@ export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleCha
           step="0.01"
           min="0.1"
           max="3"
-          value={offset.scale}
-          onChange={(e) => onScaleChange(parseFloat(e.target.value) || 1)}
+          value={localOffset.scale}
+          onChange={(e) => {
+            const newScale = parseFloat(e.target.value) || 1
+            setLocalOffset({ ...localOffset, scale: newScale })
+            onScaleChange(newScale)
+          }}
           className="w-full border border-gray-300 rounded px-2 py-1 text-sm font-mono"
         />
         {/* Quick presets */}
@@ -81,9 +98,12 @@ export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleCha
           {[0.5, 0.75, 1, 1.25, 1.5].map(s => (
             <button
               key={s}
-              onClick={() => onScaleChange(s)}
+              onClick={() => {
+                setLocalOffset({ ...localOffset, scale: s })
+                onScaleChange(s)
+              }}
               className={`text-xs px-1.5 py-0.5 rounded border ${
-                offset.scale === s ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white border-gray-300 hover:bg-gray-100'
+                localOffset.scale === s ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white border-gray-300 hover:bg-gray-100'
               }`}
             >{s}×</button>
           ))}
