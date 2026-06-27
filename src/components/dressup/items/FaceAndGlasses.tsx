@@ -1,14 +1,14 @@
 'use client'
 
 /**
- * Glasses.tsx — Glasses and face accessories.
+ * FaceAndGlasses.tsx — Glasses and eyewear.
  *
- * TWO sub-layers:
- *   - Most items (glasses, face accessories) render UNDER the hair front (z=5.8)
- *   - face9 specifically renders OVER the hair front (z=6.2)
- *
- * Add items to GLASSES_ITEMS. Mark face9 with id: 'face9'.
+ * Layer rule:
+ *   - All items render UNDER the hair front (z=5.8)
+ *   - Exception: if id === 'face9', renders OVER hair front (z=6.2)
  */
+
+import React from 'react'
 
 export interface GlassesProps {
   align?: { x: number; y: number; scale: number }
