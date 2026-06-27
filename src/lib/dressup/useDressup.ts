@@ -13,7 +13,7 @@ import { useCallback, useState } from 'react'
 import { CATEGORIES, TOP_ITEMS, DRESS_ITEMS, type CategoryId } from './items'
 
 export const DEFAULT_TOP_ID = 'top4'
-export const DEFAULT_BOTTOM_ID = 'bottom1'
+export const DEFAULT_BOTTOM_ID = 'bottom8'
 
 interface DressupState {
   background: string | null
