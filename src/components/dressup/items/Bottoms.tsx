@@ -47,11 +47,11 @@ export const Bottom10: React.FC<ClothProps> = makePngBottom('/bottom10.png', { x
 export const Bottom11: React.FC<ClothProps> = makePngBottom('/bottom11.png', { x: 26, y: 57, scale: 0.83 })
 export const Bottom12: React.FC<ClothProps> = makePngBottom('/bottom12.png', { x: 41, y: 70, scale: 0.75 })
 export const Bottom13: React.FC<ClothProps> = makePngBottom('/bottom13.png', { x: 40, y: 80, scale: 0.75 })
+export const Bottom18: React.FC<ClothProps> = makePngBottom('/bottom18.png', { x: 34, y: 65, scale: 0.79 })
 export const Bottom14: React.FC<ClothProps> = makePngBottom('/bottom14.png', { x: 35, y: 81, scale: 0.77 })
 export const Bottom15: React.FC<ClothProps> = makePngBottom('/bottom15.png', { x: 52, y: 89, scale: 0.69 })
 export const Bottom16: React.FC<ClothProps> = makePngBottom('/bottom16.png', { x: 35, y: 66, scale: 0.8 })
 export const Bottom17: React.FC<ClothProps> = makePngBottom('/bottom17.png', { x: 38, y: 80, scale: 0.76 })
-export const Bottom18: React.FC<ClothProps> = makePngBottom('/bottom18.png', { x: 34, y: 65, scale: 0.79 })
 export const Bottom19: React.FC<ClothProps> = makePngBottom('/bottom19.png', { x: 6, y: 6, scale: 0.97 })
 export const Bottom20: React.FC<ClothProps> = makePngBottom('/bottom20.png', { x: 33, y: 67, scale: 0.78 })
 export const Bottom21: React.FC<ClothProps> = makePngBottom('/bottom21.png', { x: 8, y: 1, scale: 1 })
@@ -73,20 +73,20 @@ export const BOTTOM_ITEMS: BottomItem[] = [
   { id: 'bottom5', name: 'Light Blue', Component: Bottom5 },
   { id: 'bottom6', name: 'Beige Buttoned', Component: Bottom6 },
   { id: 'bottom7', name: 'Brown Pleated', Component: Bottom7 },
-  { id: 'bottom8', name: 'Black Plaid', Component: Bottom8 },
-  { id: 'bottom9', name: 'Maroon Pleated', Component: Bottom9 },
-  { id: 'bottom10', name: 'Pink Ruffled', Component: Bottom10 },
-  { id: 'bottom11', name: 'Blue Striped', Component: Bottom11 },
-  { id: 'bottom12', name: 'Light Blue', Component: Bottom12 },
-  { id: 'bottom13', name: 'Beige Buttoned', Component: Bottom13 },
-  { id: 'bottom14', name: 'Brown Pleated', Component: Bottom14 },
-  { id: 'bottom15', name: 'Black Plaid', Component: Bottom15 },
-  { id: 'bottom16', name: 'Maroon Pleated', Component: Bottom16 },
-  { id: 'bottom17', name: 'Pink Ruffled', Component: Bottom17 },
-  { id: 'bottom18', name: 'Blue Striped', Component: Bottom18 },
-  { id: 'bottom19', name: 'Light Blue', Component: Bottom19 },
-  { id: 'bottom20', name: 'Beige Buttoned', Component: Bottom20 },
-  { id: 'bottom21', name: 'Brown Pleated', Component: Bottom21 },
+  { id: 'bottom8', name: 'White Bottom', Component: Bottom8 },
+  { id: 'bottom9', name: 'Brown Striped', Component: Bottom9 },
+  { id: 'bottom10', name: 'Jeans Buttoned', Component: Bottom10 },
+  { id: 'bottom11', name: 'Pink A-line', Component: Bottom11 },
+  { id: 'bottom12', name: 'Fluffy Blue', Component: Bottom12 },
+  { id: 'bottom13', name: 'Brown Straight', Component: Bottom13 },
+  { id: 'bottom18', name: 'Black Straight', Component: Bottom18 },
+  { id: 'bottom14', name: 'Green Bottom', Component: Bottom14 },
+  { id: 'bottom15', name: 'Fluffy Flowers', Component: Bottom15 },
+  { id: 'bottom16', name: 'Red Ruffled', Component: Bottom16 },
+  { id: 'bottom17', name: 'Red Striped', Component: Bottom17 },
+  { id: 'bottom19', name: 'asymmetrical Jeans', Component: Bottom19 },
+  { id: 'bottom20', name: 'Brown Pleated2', Component: Bottom20 },
+  { id: 'bottom21', name: 'Black Pleated', Component: Bottom21 },
 ]
 
 export default BOTTOM_ITEMS
