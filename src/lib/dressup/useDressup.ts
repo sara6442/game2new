@@ -2,18 +2,6 @@
  
 /**
  * useDressup.ts — Client state for the dress-up game.
- *
- * Rules:
- *  - hat and hairAcc are mutually exclusive
- *  - glasses and faceAcc are independent
- *  - handDeco → ring → glove → bracelet all stack independently
- *  - fluffy gloves render ABOVE long sleeves; non-fluffy UNDER
- *  - necklace is fully independent
- *  - coat always layers in front — no sleeve restriction
- *  - jackets (coat type) can be worn with short sleeves only; long sleeves get replaced
- *  - coats can be worn above anything except dress19
- *  - sleeves can be worn under short sleeves
- *  - bracelets under gloves; if rings or hand decorations chosen, gloves disappear
  */
  
 import { useCallback, useState } from 'react'
@@ -112,11 +100,6 @@ const DEFAULT_STATE: DressupState = {
   necklace:    null,
 }
  
-/**
- * Returns true if the selected glove is fluffy.
- * Fluffy gloves render ABOVE long sleeves (always visible).
- * Non-fluffy gloves render UNDER long sleeves.
- */
 export function isGloveFluffy(gloveId: string | null): boolean {
   if (!gloveId) return false
   const glove = GLOVE_ITEMS.find((g) => g.id === gloveId) as
@@ -125,9 +108,6 @@ export function isGloveFluffy(gloveId: string | null): boolean {
   return glove?.fluffy === true || gloveId.includes('fluffy')
 }
 
-/**
- * Check if current top/dress has long sleeves
- */
 function hasLongSleeves(state: DressupState): boolean {
   if (state.dress) {
     const dress = DRESS_ITEMS.find((d) => d.id === state.dress)
@@ -140,9 +120,6 @@ function hasLongSleeves(state: DressupState): boolean {
   return false
 }
 
-/**
- * Check if current top/dress has short sleeves
- */
 function hasShortSleeves(state: DressupState): boolean {
   if (state.dress) {
     const dress = DRESS_ITEMS.find((d) => d.id === state.dress)
@@ -155,9 +132,6 @@ function hasShortSleeves(state: DressupState): boolean {
   return false
 }
 
-/**
- * Check if coat is a jacket (not a coat/cardigan/apron)
- */
 function isJacket(coatId: string | null): boolean {
   if (!coatId) return false
   const coat = COAT_ITEMS.find((c) => c.id === coatId)
@@ -180,7 +154,6 @@ export function useDressup() {
           next.dress  = itemId
           next.top    = null
           next.bottom = null
-          // Clear sleeves when dress is selected (dress has its own sleeves)
           next.sleeve = null
         } else {
           next.dress  = null
@@ -196,7 +169,6 @@ export function useDressup() {
         } else {
           next.top = itemId ?? DEFAULT_TOP_ID
         }
-        // Clear sleeves when top changes
         next.sleeve = null
  
       } else if (categoryId === 'bottom') {
@@ -209,15 +181,13 @@ export function useDressup() {
         }
  
       } else if (categoryId === 'coat') {
-        // If removing coat, just remove it
         if (itemId === null) {
           next.coat = null
           return next
         }
         
-        // ✅ Check if it's a jacket - only worn with short sleeves
+        // ✅ FIXED: Only jackets replace long sleeves. Coats/cardigans/aprons can be worn over anything.
         if (isJacket(itemId) && hasLongSleeves(prev)) {
-          // Replace long-sleeve top/dress with default short-sleeve
           if (prev.dress) {
             next.dress = null
             next.top = DEFAULT_TOP_ID
@@ -225,58 +195,46 @@ export function useDressup() {
           } else if (prev.top) {
             next.top = DEFAULT_TOP_ID
           }
-          // Clear sleeves when replacing top
           next.sleeve = null
         }
         
-        // Add the coat
         next.coat = itemId
 
       } else if (categoryId === 'sleeve') {
-        // ✅ Sleeves can only be worn with short sleeves
         if (itemId !== null && !hasShortSleeves(prev)) {
-          // Don't allow sleeves on long-sleeve or no top/dress
           console.warn('Sleeves can only be worn with short-sleeve tops/dresses')
           return prev
         }
         next.sleeve = itemId
 
       } else if (categoryId === 'hat') {
-        // Hat and hairAcc are mutually exclusive
         next.hat     = itemId
         next.hairAcc = null
  
       } else if (categoryId === 'hairAcc') {
-        // HairAcc and hat are mutually exclusive
         next.hairAcc = itemId
         next.hat     = null
 
       } else if (categoryId === 'glove') {
-        // ✅ If rings or hand decorations are chosen, gloves disappear
-        // (and vice versa - if gloves chosen, rings/handDeco disappear)
         if (itemId !== null) {
-          // Gloves selected - clear rings and handDeco
           next.ring = null
           next.handDeco = null
         }
         next.glove = itemId
 
       } else if (categoryId === 'ring') {
-        // ✅ If rings selected and gloves exist, clear gloves
         if (itemId !== null && prev.glove) {
           next.glove = null
         }
         next.ring = itemId
 
       } else if (categoryId === 'handDeco') {
-        // ✅ If hand decorations selected and gloves exist, clear gloves
         if (itemId !== null && prev.glove) {
           next.glove = null
         }
         next.handDeco = itemId
  
       } else {
-        // All other categories
         ;(next as unknown as Record<string, string | null>)[categoryId] = itemId
       }
  
@@ -313,7 +271,10 @@ export function useDressup() {
     (values: AlignmentValues) => {
       const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
       if (!selectedId) return
-      setAlignments((prev) => ({ ...prev, [selectedId]: values }))
+      setAlignments((prev) => {
+        // ✅ Preserve existing values, only update the one being modified
+        return { ...prev, [selectedId]: values }
+      })
     },
     [selection, activeCategory],
   )
