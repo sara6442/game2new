@@ -13,7 +13,16 @@ interface AlignmentPanelProps {
   offset: Offset
   onNudge: (dx: number, dy: number) => void
   onScaleChange: (scale: number) => void
+  onReset: () => void // ✅ NEW
 }
+
+// Add button in the panel:
+<button
+  onClick={onReset}
+  className="w-full text-sm bg-gray-500 hover:bg-gray-600 text-white rounded py-1.5"
+>
+  🔄 Reset to Default
+</button>
 
 export default function AlignmentPanel({ selectedId, offset, onNudge, onScaleChange }: AlignmentPanelProps) {
   // ✅ Local state to track values without losing precision
