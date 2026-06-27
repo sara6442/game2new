@@ -28,6 +28,7 @@
  *   z=9.9  face9 — black cloud, covers EVERYTHING
  */
 
+import React from 'react'
 import { Body } from './items/Body'
 import {
   HAIR_STYLES,
@@ -124,26 +125,18 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
   // ✅ face9 = black cloud = renders above EVERYTHING
   const isFace9 = selection.faceAcc === 'face9'
 
-  // Alignment helper
-  const wrapAlign = (
-    category: CategoryId,
-    itemId: string | null,
-    element: React.ReactElement,
-  ): React.ReactElement => {
+  // ✅ Get alignment for an item (alignOverride > saved alignment > undefined)
+  const getAlignment = (category: CategoryId, itemId: string | null): AlignmentValues | undefined => {
     if (alignOverride && alignOverride.category === category) {
-      const { x, y, scale } = alignOverride.values
-      return <g transform={`translate(${x}, ${y}) scale(${scale})`}>{element}</g>
+      return alignOverride.values
     }
     if (itemId && alignments[itemId]) {
-      const { x, y, scale } = alignments[itemId]
-      return <g transform={`translate(${x}, ${y}) scale(${scale})`}>{element}</g>
+      return alignments[itemId]
     }
-    return element
+    return undefined
   }
 
-  const hairAlign = alignOverride?.category === 'hair'
-    ? alignOverride.values
-    : (selection.hair && alignments[selection.hair]) || undefined
+  const hairAlign = getAlignment('hair', selection.hair)
 
   return (
     <svg
@@ -164,68 +157,68 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
         <Body src={bodySrc} />
 
         {/* z=3: BOTTOM */}
-        {!selection.dress && BottomComp && wrapAlign('bottom', selection.bottom,
-          <BottomComp color={colors.bottom} />
+        {!selection.dress && BottomComp && (
+          <BottomComp color={colors.bottom} align={getAlignment('bottom', selection.bottom)} />
         )}
 
         {/* z=3.1: HAND DECORATIONS — EXCEPT rolling pin (rendered at top) */}
-        {HandDecoComp && !isRollingPin && wrapAlign('handDeco', selection.handDeco,
-          <HandDecoComp align={undefined} />
+        {HandDecoComp && !isRollingPin && (
+          <HandDecoComp align={getAlignment('handDeco', selection.handDeco)} />
         )}
 
         {/* z=3.15: RINGS */}
-        {RingComp && wrapAlign('ring', selection.ring,
-          <RingComp align={undefined} />
+        {RingComp && (
+          <RingComp align={getAlignment('ring', selection.ring)} />
         )}
 
         {/* z=3.2: GLOVES NON-FLUFFY — under long sleeves */}
-        {GloveComp && !gloveFluffy && wrapAlign('glove', selection.glove,
-          <GloveComp align={undefined} />
+        {GloveComp && !gloveFluffy && (
+          <GloveComp align={getAlignment('glove', selection.glove)} />
         )}
 
         {/* z=3.3: BRACELETS — under gloves */}
-        {BraceletComp && wrapAlign('bracelet', selection.bracelet,
-          <BraceletComp align={undefined} />
+        {BraceletComp && (
+          <BraceletComp align={getAlignment('bracelet', selection.bracelet)} />
         )}
 
         {/* z=4: TOP */}
-        {!selection.dress && TopComp && wrapAlign('top', selection.top,
-          <TopComp color={colors.top} />
+        {!selection.dress && TopComp && (
+          <TopComp color={colors.top} align={getAlignment('top', selection.top)} />
         )}
 
         {/* z=5: DRESS (except dress19) */}
-        {selection.dress && !isDress19 && DressComp && wrapAlign('dress', selection.dress,
-          <DressComp color={colors.dress} />
+        {selection.dress && !isDress19 && DressComp && (
+          <DressComp color={colors.dress} align={getAlignment('dress', selection.dress)} />
         )}
 
-        {/* z=4.5: SLEEVES — detachable sleeves, only with short sleeves */}
-        {SleeveComp && wrapAlign('sleeve', selection.sleeve,
-          <SleeveComp color={colors.sleeve} />
+        {/* z=4.5: SLEEVES */}
+        {SleeveComp && (
+          <SleeveComp color={colors.sleeve} align={getAlignment('sleeve', selection.sleeve)} />
         )}
 
         {/* z=5.5: COAT — over everything except dress19 */}
-        {CoatComp && !isDress19 && wrapAlign('coat', selection.coat,
-          <CoatComp color={colors.coat} />
+        {CoatComp && !isDress19 && (
+          <CoatComp color={colors.coat} align={getAlignment('coat', selection.coat)} />
         )}
 
         {/* z=5.6: GLOVES FLUFFY */}
-        {GloveComp && gloveFluffy && wrapAlign('glove', selection.glove,
-          <GloveComp align={undefined} />
+        {GloveComp && gloveFluffy && (
+          <GloveComp align={getAlignment('glove', selection.glove)} />
         )}
 
         {/* z=5.7: NECKLACE */}
-        {NecklaceComp && wrapAlign('necklace', selection.necklace,
-          <NecklaceComp align={undefined} />
+        {NecklaceComp && (
+          <NecklaceComp align={getAlignment('necklace', selection.necklace)} />
         )}
 
         {/* z=5.8: GLASSES */}
-        {GlassesComp && wrapAlign('glasses', selection.glasses,
-          <GlassesComp align={undefined} />
+        {GlassesComp && (
+          <GlassesComp align={getAlignment('glasses', selection.glasses)} />
         )}
 
         {/* z=5.85: FACE ACC 1-8 */}
-        {FaceAccComp && !isFace9 && wrapAlign('faceAcc', selection.faceAcc,
-          <FaceAccComp align={undefined} />
+        {FaceAccComp && !isFace9 && (
+          <FaceAccComp align={getAlignment('faceAcc', selection.faceAcc)} />
         )}
 
         {/* z=6: HAIR FRONT */}
@@ -234,36 +227,36 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
         )}
 
         {/* z=6.5: HAT / HAIR ACCESSORY */}
-        {HatComp && wrapAlign('hat', selection.hat,
-          <HatComp align={undefined} />
+        {HatComp && (
+          <HatComp align={getAlignment('hat', selection.hat)} />
         )}
-        {HairAccComp && wrapAlign('hairAcc', selection.hairAcc,
-          <HairAccComp align={undefined} />
+        {HairAccComp && (
+          <HairAccComp align={getAlignment('hairAcc', selection.hairAcc)} />
         )}
 
         {/* z=7: SHOES */}
-        {ShoeComp && wrapAlign('shoe', selection.shoe,
-          <ShoeComp color={colors.shoe} />
+        {ShoeComp && (
+          <ShoeComp color={colors.shoe} align={getAlignment('shoe', selection.shoe)} />
         )}
 
         {/* z=8: DRESS19 — over EVERYTHING except rolling pin and face9 */}
-        {isDress19 && DressComp && wrapAlign('dress', selection.dress,
-          <DressComp color={colors.dress} />
+        {isDress19 && DressComp && (
+          <DressComp color={colors.dress} align={getAlignment('dress', selection.dress)} />
         )}
 
         {/* z=9: DECORATIONS */}
-        {DecorationComp && wrapAlign('decoration', selection.decoration,
-          <DecorationComp />
+        {DecorationComp && (
+          <DecorationComp align={getAlignment('decoration', selection.decoration)} />
         )}
 
         {/* 🎯 z=9.5: Rolling Pin (handdeco1 / dec1L.png) — 2nd top layer */}
-        {HandDecoComp && isRollingPin && wrapAlign('handDeco', selection.handDeco,
-          <HandDecoComp align={undefined} />
+        {HandDecoComp && isRollingPin && (
+          <HandDecoComp align={getAlignment('handDeco', selection.handDeco)} />
         )}
 
         {/* 🎯 z=9.9: face9 BLACK CLOUD — TOP LAYER */}
-        {FaceAccComp && isFace9 && wrapAlign('faceAcc', selection.faceAcc,
-          <FaceAccComp align={undefined} />
+        {FaceAccComp && isFace9 && (
+          <FaceAccComp align={getAlignment('faceAcc', selection.faceAcc)} />
         )}
 
       </g>
