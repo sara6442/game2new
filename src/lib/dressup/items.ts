@@ -10,6 +10,7 @@ import type { CoatProps as CoatClothProps, CoatItem }      from '@/components/dr
 import type { HairProps, HairStyle }                       from '@/components/dressup/items/Hairs'
 import type { BackgroundProps, BackgroundItem }            from '@/components/dressup/items/Backgrounds'
 import type { ShoeProps, ShoeItem }                        from '@/components/dressup/items/Shoes'
+import type { SleeveProps, SleeveItem }                    from '@/components/dressup/items/Sleeves'
 import type { DecorationProps, DecorationItem }            from '@/components/dressup/items/Decorations'
 import type { GlassesProps, GlassesItem }                  from '@/components/dressup/items/FaceAndGlasses'
 import type { FaceAccProps, FaceAccItem }                  from '@/components/dressup/items/FaceAcc'
@@ -28,6 +29,7 @@ import { COAT_ITEMS }       from '@/components/dressup/items/Coats'
 import { HAIR_STYLES }      from '@/components/dressup/items/Hairs'
 import { BACKGROUND_ITEMS } from '@/components/dressup/items/Backgrounds'
 import { SHOE_ITEMS }       from '@/components/dressup/items/Shoes'
+import { SLEEVE_ITEMS }     from '@/components/dressup/items/Sleeves'
 import { DECORATION_ITEMS } from '@/components/dressup/items/Decorations'
 import { GLASSES_ITEMS }    from '@/components/dressup/items/FaceAndGlasses'
 import { FACE_ACC_ITEMS }   from '@/components/dressup/items/FaceAcc'
@@ -47,16 +49,17 @@ export type CategoryId =
   | 'dress'
   | 'coat'
   | 'shoe'
-  | 'decoration'      // ✅ Kept as separate category
-  | 'glasses'         // glasses — under hair (face9 is over)
-  | 'faceAcc'         // face accessories — under hair (faceacc9 is over)
-  | 'hairAcc'         // hair clips/pins — mutually exclusive with hat
-  | 'hat'             // hats — mutually exclusive with hairAcc
-  | 'handDeco'        // nails, henna — lowest hand layer
-  | 'ring'            // rings — above nails, under gloves
-  | 'glove'           // gloves — fluffy=above sleeves, non-fluffy=under
-  | 'bracelet'        // bracelets — above gloves
-  | 'necklace'        // necklaces — above top/dress neckline
+  | 'sleeve'         // ✅ New: detachable sleeves
+  | 'decoration'
+  | 'glasses'
+  | 'faceAcc'
+  | 'hairAcc'
+  | 'hat'
+  | 'handDeco'
+  | 'ring'
+  | 'glove'
+  | 'bracelet'
+  | 'necklace'
  
 export interface Category {
   id: CategoryId
@@ -96,7 +99,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     id: 'clothing',
     label: 'Clothing',
     icon: '👗',
-    children: ['top', 'bottom', 'dress', 'coat'],
+    children: ['top', 'bottom', 'dress', 'coat', 'sleeve'],
   },
   {
     id: 'neck',
@@ -114,7 +117,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     id: 'other',
     label: 'Other',
     icon: '✨',
-    children: ['shoe', 'decoration'], // ✅ 'accessory' removed
+    children: ['shoe', 'decoration'],
   },
 ]
  
@@ -136,6 +139,7 @@ export const CATEGORIES: Category[] = [
   { id: 'bottom', label: 'Bottoms', icon: '👖', supportsColor: false, palette: [] },
   { id: 'dress', label: 'Dresses', icon: '👗', supportsColor: false, palette: [] },
   { id: 'coat', label: 'Coats', icon: '🧥', supportsColor: false, palette: [] },
+  { id: 'sleeve', label: 'Sleeves', icon: '💪', supportsColor: false, palette: [] },
   
   // ── Neck ──────────────────────────────────────────────────────────────────
   { id: 'necklace', label: 'Necklaces', icon: '📿', supportsColor: false, palette: [] },
@@ -149,9 +153,8 @@ export const CATEGORIES: Category[] = [
   // ── Other ──────────────────────────────────────────────────────────────────
   { id: 'shoe', label: 'Shoes', icon: '👟', supportsColor: false, palette: [] },
   { id: 'decoration', label: 'Decorations', icon: '🌷', supportsColor: false, palette: [] },
-  // ❌ 'accessory' REMOVED
 ]
- 
+
 export interface AnyItem {
   id: string
   name: string
@@ -175,6 +178,7 @@ export const ITEMS_BY_CATEGORY: Record<CategoryId, AnyItem[]> = {
   dress:       DRESS_ITEMS      as unknown as AnyItem[],
   coat:        COAT_ITEMS       as unknown as AnyItem[],
   shoe:        SHOE_ITEMS       as unknown as AnyItem[],
+  sleeve:      SLEEVE_ITEMS     as unknown as AnyItem[],
   decoration:  DECORATION_ITEMS as unknown as AnyItem[],
   glasses:     GLASSES_ITEMS    as unknown as AnyItem[],
   faceAcc:     FACE_ACC_ITEMS   as unknown as AnyItem[],
@@ -189,14 +193,14 @@ export const ITEMS_BY_CATEGORY: Record<CategoryId, AnyItem[]> = {
  
 export {
   HAIR_STYLES, TOP_ITEMS, BOTTOM_ITEMS, DRESS_ITEMS, COAT_ITEMS,
-  BACKGROUND_ITEMS, SHOE_ITEMS, DECORATION_ITEMS,
+  BACKGROUND_ITEMS, SHOE_ITEMS, SLEEVE_ITEMS, DECORATION_ITEMS,
   GLASSES_ITEMS, FACE_ACC_ITEMS, HAIR_ACC_ITEMS, HAT_ITEMS,
   GLOVE_ITEMS, BRACELET_ITEMS, HAND_DECO_ITEMS, RING_ITEMS, NECKLACE_ITEMS,
 }
  
 export type {
   ClothProps, BottomClothProps, DressClothProps, CoatClothProps,
-  HairProps, BackgroundProps, ShoeProps, DecorationProps,
+  HairProps, BackgroundProps, ShoeProps, SleeveProps, DecorationProps,
   GlassesProps, FaceAccProps, HairAccProps, HatProps,
   GloveProps, BraceletProps, HandDecoProps, RingProps, NecklaceProps,
 }
