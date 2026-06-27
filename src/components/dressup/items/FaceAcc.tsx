@@ -53,8 +53,8 @@ export const Face3 = makePngFaceAcc('/face3.png', { x: 0, y: 0, scale: 1 })
 export const Face4 = makePngFaceAcc('/face4.png', { x: 0, y: 0, scale: 1 })
 export const Face5 = makePngFaceAcc('/face5.png', { x: 0, y: 0, scale: 1 })
 export const Face6 = makePngFaceAcc('/face6.png', { x: 0, y: 0, scale: 1 })
-export const Face7 = makePngFaceAcc('/face8.png', { x: -3, y: 15, scale: 1 }
-export const Face8 = makePngFaceAcc('/face7.png', { x: 0, y: 0, scale: 1 })
+export const Face8 = makePngFaceAcc('/face8.png', { x: 0, y: 0, scale: 1 })
+export const Face7 = makePngFaceAcc('/face7.png', { x: -3, y: 15, scale: 1 })
 export const Face9 = makePngFaceAcc('/face9.png', { x: 0, y: 0, scale: 1 })
 
 export const FACE_ACC_ITEMS: FaceAccItem[] = [
