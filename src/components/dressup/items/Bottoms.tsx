@@ -57,7 +57,7 @@ export const Bottom14: React.FC<ClothProps> = makePngBottom('/bottom14.png', { x
 export const Bottom15: React.FC<ClothProps> = makePngBottom('/bottom15.png', { x: 52, y: 89, scale: 0.69 })
 export const Bottom16: React.FC<ClothProps> = makePngBottom('/bottom16.png', { x: 35, y: 66, scale: 0.8 })
 export const Bottom17: React.FC<ClothProps> = makePngBottom('/bottom17.png', { x: 38, y: 80, scale: 0.76 })
-export const Bottom19: React.FC<ClothProps> = makePngBottom('/bottom19.png', { x: 6, y: 6, scale: 0.97 })
+export const Bottom19: React.FC<ClothProps> = makePngBottom('/bottom19.png', { x: 41, y: 75, scale: 0.75 })
 export const Bottom20: React.FC<ClothProps> = makePngBottom('/bottom20.png', { x: 33, y: 67, scale: 0.78 })
 export const Bottom21: React.FC<ClothProps> = makePngBottom('/bottom21.png', { x: 8, y: 1, scale: 1 })
 
@@ -89,7 +89,7 @@ export const BOTTOM_ITEMS: BottomItem[] = [
   { id: 'bottom15', name: 'Fluffy Flowers', Component: Bottom15 },
   { id: 'bottom16', name: 'Red Ruffled', Component: Bottom16 },
   { id: 'bottom17', name: 'Red Striped', Component: Bottom17 },
-  { id: 'bottom19', name: 'asymmetrical Jeans', Component: Bottom19 },
+  { id: 'bottom19', name: 'Asymmetrical Jeans', Component: Bottom19 },
   { id: 'bottom20', name: 'Brown Pleated2', Component: Bottom20 },
   { id: 'bottom21', name: 'Black Pleated', Component: Bottom21 },
 ]
