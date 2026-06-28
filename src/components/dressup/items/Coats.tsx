@@ -1,15 +1,5 @@
 'use client'
 
-/**
- * Coats.tsx — Outerwear (jackets, coats, cardigans, aprons).
- *
- * Rules:
- * - Coats render in front of tops/dresses (z=5.5)
- * - dress19 goes OVER coats
- * - Coats can be worn with any top/dress
- * - If top/dress has long sleeves, it gets replaced with default short-sleeve
- */
-
 export interface CoatProps {
   color?: string
   align?: { x: number; y: number; scale: number }
@@ -19,55 +9,41 @@ export interface CoatItem {
   id: string
   name: string
   Component: React.FC<CoatProps>
-  type: 'jacket' | 'coat' | 'cardigan' | 'apron'
+  sleeveLength: 'long' | 'short'
+  defaultAlign: { x: number; y: number; scale: number }
 }
 
-interface CoatAlignment { x: number; y: number; scale: number }
-
-function makePngCoat(src: string, defaultAlign: CoatAlignment = { x: 0, y: 0, scale: 1 }): React.FC<CoatProps> {
+function makePngCoat(src: string, defaultAlign = { x: 0, y: 0, scale: 1 }): React.FC<CoatProps> {
   return function PngCoat({ align }: CoatProps) {
     const { x, y, scale } = align ?? defaultAlign
     return (
       <g transform={`translate(${x}, ${y}) scale(${scale})`}>
-        <image
-          href={src}
-          x={0}
-          y={0}
-          width={325}
-          height={742}
-          preserveAspectRatio="xMidYMid meet"
-          onError={(e) => console.error(`Failed to load coat: ${src}`, e)}
-        />
+        <image href={src} x={0} y={0} width={325} height={742} preserveAspectRatio="xMidYMid meet" />
       </g>
     )
   }
 }
 
-// ── Coats with custom alignments ─────────────────────────────────────────────
-export const Coat1: React.FC<CoatProps> = makePngCoat('/coat1.png', { x: 0, y: 0, scale: 1 })
-export const Coat2: React.FC<CoatProps> = makePngCoat('/coat2.png', { x: 0, y: 0, scale: 1 })
-export const Coat3: React.FC<CoatProps> = makePngCoat('/coat3.png', { x: 0, y: 0, scale: 1 })
-export const Coat4: React.FC<CoatProps> = makePngCoat('/coat4(appronL).png', { x: 0, y: 0, scale: 1 })
-export const Jacket1: React.FC<CoatProps> = makePngCoat('/jacker1.png', { x: 0, y: 0, scale: 1 })
-export const Jacket2: React.FC<CoatProps> = makePngCoat('/jacket2.png', { x: 0, y: 0, scale: 1 })
-export const Jacket3: React.FC<CoatProps> = makePngCoat('/jacket3.png', { x: 0, y: 0, scale: 1 })
-export const Jacket4: React.FC<CoatProps> = makePngCoat('/jacket4.png', { x: 0, y: 0, scale: 1 })
-export const Jacket5: React.FC<CoatProps> = makePngCoat('/jacket5.png', { x: 0, y: 0, scale: 1 })
-
+export const Coat1   = makePngCoat('/coat1.png')
+export const Coat2   = makePngCoat('/coat2.png')
+export const Coat3   = makePngCoat('/coat3.png')
+export const Coat4   = makePngCoat('/coat4(appronL).png')
+export const Jacket1 = makePngCoat('/jacket1.png')
+export const Jacket2 = makePngCoat('/jacket2.png')
+export const Jacket3 = makePngCoat('/jacket3.png')
+export const Jacket4 = makePngCoat('/jacket4.png')
+export const Jacket5 = makePngCoat('/jacket5.png')
 
 export const COAT_ITEMS: CoatItem[] = [
-  { id: 'coat1', name: 'Beige Coat', Component: Coat1, type: 'coat' },
-  { id: 'coat2', name: 'Black coat', Component: Coat2, type: 'coat' },
-  { id: 'coat3', name: 'Chess Coat', Component: Coat3, type: 'coat' },
-  { id: 'coat4', name: 'Princess Apron', Component: Coat4, type: 'apron' },
-  { id: 'jacket1', name: 'Furry Jacket', Component: Jacket1, type: 'jacket' },
-  { id: 'jacket2', name: 'Beige Jacket', Component: Jacket2, type: 'jacket' },
-  { id: 'jacket3', name: 'Brown Jacket', Component: Jacket3, type: 'jacket' },
-  { id: 'jacket4', name: 'Leather Jacket', Component: Jacket4, type: 'jacket' },
-   { id: 'jacket5', name: 'Gray Jacket', Component: Jacket5, type: 'jacket' },
-
-
-
+  { id: 'coat1',   name: 'Coat 1',   Component: Coat1,   sleeveLength: 'long',  defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'coat2',   name: 'Coat 2',   Component: Coat2,   sleeveLength: 'long',  defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'coat3',   name: 'Coat 3',   Component: Coat3,   sleeveLength: 'long',  defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'coat4',   name: 'Apron L',  Component: Coat4,   sleeveLength: 'long',  defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'jacket1', name: 'Jacket 1', Component: Jacket1, sleeveLength: 'long',  defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'jacket2', name: 'Jacket 2', Component: Jacket2, sleeveLength: 'short', defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'jacket3', name: 'Jacket 3', Component: Jacket3, sleeveLength: 'short', defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'jacket4', name: 'Jacket 4', Component: Jacket4, sleeveLength: 'short', defaultAlign: { x: 0, y: 0, scale: 1 } },
+  { id: 'jacket5', name: 'Jacket 5', Component: Jacket5, sleeveLength: 'short', defaultAlign: { x: 0, y: 0, scale: 1 } },
 ]
 
 export default COAT_ITEMS
