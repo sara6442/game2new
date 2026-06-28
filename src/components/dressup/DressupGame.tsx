@@ -9,6 +9,25 @@ import { useDressup } from '@/lib/dressup/useDressup'
 import { StageCanvas } from './StageCanvas'
 import { Sidebar } from './Sidebar'
 import { CANVAS_ASPECT_RATIO, CANVAS_WIDTH, CANVAS_HEIGHT } from '@/lib/dressup/canvas-dimensions'
+import {
+  TOP_ITEMS,
+  BOTTOM_ITEMS,
+  DRESS_ITEMS,
+  COAT_ITEMS,
+  HAIR_STYLES,
+  BACKGROUND_ITEMS,
+  SHOE_ITEMS,
+  HAT_ITEMS,
+  HAIR_ACC_ITEMS,
+  GLASSES_ITEMS,
+  FACE_ACC_ITEMS,
+  GLOVE_ITEMS,
+  BRACELET_ITEMS,
+  HAND_DECO_ITEMS,
+  RING_ITEMS,
+  NECKLACE_ITEMS,
+  SLEEVE_ITEMS,
+} from '@/lib/dressup/items'
 
 interface SavedOutfit {
   id: string
@@ -49,19 +68,10 @@ export function DressupGame() {
 
   // ── Randomize ──────────────────────────────────────────────────────────────
   const handleRandomize = () => {
-    // Get random items from each category
     const randomItem = (items: any[]) => {
-      if (items.length === 0) return null
+      if (!items || items.length === 0) return null
       return items[Math.floor(Math.random() * items.length)].id
     }
-
-    // Import items dynamically or use the ones from game
-    const { 
-      TOP_ITEMS, BOTTOM_ITEMS, DRESS_ITEMS, COAT_ITEMS, 
-      HAIR_STYLES, BACKGROUND_ITEMS, SHOE_ITEMS, HAT_ITEMS,
-      HAIR_ACC_ITEMS, GLASSES_ITEMS, FACE_ACC_ITEMS,
-      GLOVE_ITEMS, BRACELET_ITEMS, HAND_DECO_ITEMS, RING_ITEMS, NECKLACE_ITEMS
-    } = require('@/lib/dressup/items')
 
     // Randomly decide if wearing dress or top+bottom
     const wearDress = Math.random() > 0.5
@@ -74,7 +84,7 @@ export function DressupGame() {
       dress: wearDress ? randomItem(DRESS_ITEMS) : null,
       coat: Math.random() > 0.7 ? randomItem(COAT_ITEMS) : null,
       shoe: randomItem(SHOE_ITEMS),
-      sleeve: Math.random() > 0.8 ? randomItem(require('@/lib/dressup/items').SLEEVE_ITEMS) : null,
+      sleeve: Math.random() > 0.8 ? randomItem(SLEEVE_ITEMS) : null,
       decoration: null,
       glasses: Math.random() > 0.7 ? randomItem(GLASSES_ITEMS) : null,
       faceAcc: Math.random() > 0.7 ? randomItem(FACE_ACC_ITEMS) : null,
