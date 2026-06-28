@@ -38,7 +38,7 @@ export const Dress15: React.FC<ClothProps> = makePngDress('/dress15.png', { x: 1
 export const Dress16: React.FC<ClothProps> = makePngDress('/dress16.png', { x: -7,   y: 34,   scale: 1.04 })
 export const Dress17: React.FC<ClothProps> = makePngDress('/dress17.png', { x: 7,    y: 6,    scale: 0.96 })  // ✅ Updated
 export const Dress18: React.FC<ClothProps> = makePngDress('/dress18.png', { x: 31,   y: 48,   scale: 0.8  })
-export const Dress19: React.FC<ClothProps> = makePngDress('/dress19M.png',{ x: -79,  y: -176, scale: 1.5  })
+export const Dress19: React.FC<ClothProps> = makePngDress('/dress19M.png', { x: -40, y: -116, scale: 1.25 })
 
 export interface DressItem {
   id: string
@@ -67,7 +67,7 @@ export const DRESS_ITEMS: DressItem[] = [
   { id: 'dress16', name: 'Dress 16', Component: Dress16, sleeveLength: 'long',  defaultAlign: { x: -7,   y: 34,   scale: 1.04 } },
   { id: 'dress17', name: 'Dress 17', Component: Dress17, sleeveLength: 'none',  defaultAlign: { x: 7,    y: 6,    scale: 0.96 } },  // ✅ Updated
   { id: 'dress18', name: 'Dress 18', Component: Dress18, sleeveLength: 'long',  defaultAlign: { x: 31,   y: 48,   scale: 0.8  } },
-  { id: 'dress19', name: 'Dress 19', Component: Dress19, sleeveLength: 'long',  defaultAlign: { x: -79,  y: -176, scale: 1.5  } },
+  { id: 'dress19', name: 'Dress 19', Component: Dress19, sleeveLength: 'long',  defaultAlign: { x: -40, y: -116, scale: 1.25 } },
 ]
 
 export default DRESS_ITEMS
