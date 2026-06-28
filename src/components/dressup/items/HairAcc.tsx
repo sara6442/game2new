@@ -16,7 +16,16 @@ export interface HairAccItem {
   id: string
   name: string
   Component: React.FC<HairAccProps>
+  defaultAlign: { x: number; y: number; scale: number }
 }
+
+export const HAIR_ACC_ITEMS: HairAccItem[] = [
+  { id: 'hairacc1', name: 'Hair Acc 1', Component: HairAcc1, defaultAlign: { x: 3,   y: -73, scale: 1   } },
+  { id: 'hairacc2', name: 'Hair Acc 2', Component: HairAcc2, defaultAlign: { x: -4,  y: -81, scale: 1   } },
+  { id: 'hairacc3', name: 'Hair Acc 3', Component: HairAcc3, defaultAlign: { x: 5,   y: -45, scale: 1   } },
+  { id: 'hairacc4', name: 'Hair Acc 4', Component: HairAcc4, defaultAlign: { x: 0,   y: -40, scale: 1   } },
+  { id: 'hairacc5', name: 'Hair Acc 5', Component: HairAcc5, defaultAlign: { x: -20, y: -36, scale: 1.1 } },
+]
 
 function makePngHairAcc(src: string, defaultAlign = { x: 0, y: 0, scale: 1 }): React.FC<HairAccProps> {
   return function PngHairAcc({ align }: HairAccProps) {
