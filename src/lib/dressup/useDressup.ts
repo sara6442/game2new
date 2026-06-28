@@ -133,14 +133,14 @@ function hasLongSleeves(state: DressupState): boolean {
 }
 
 export function useDressup() {
-  const [selection, setSelection] = useState<DressupState>(DEFAULT_STATE)
-  const [colors, setColors]       = useState<ColorState>(DEFAULT_COLORS)
+  const [selection, setSelectionState] = useState<DressupState>(DEFAULT_STATE)  // ✅ Renamed
+  const [colors, setColorsState] = useState<ColorState>(DEFAULT_COLORS)          // ✅ Renamed
   const [activeCategory, setActiveCategory] = useState<CategoryId>('background')
   const [alignMode, setAlignMode] = useState(false)
   const [alignments, setAlignments] = useState<Record<string, AlignmentValues>>({})
 
   const selectItem = useCallback((categoryId: CategoryId, itemId: string | null) => {
-    setSelection((prev) => {
+    setSelectionState((prev) => {
       const next = { ...prev }
 
       if (categoryId === 'dress') {
@@ -148,7 +148,6 @@ export function useDressup() {
           next.dress  = itemId
           next.top    = null
           next.bottom = null
-          // Clear sleeves when dress changes
           next.sleeve = null
         } else {
           next.dress  = null
@@ -163,7 +162,6 @@ export function useDressup() {
         } else {
           next.top = itemId ?? DEFAULT_TOP_ID
         }
-        // Clear sleeves when top changes
         next.sleeve = null
       } else if (categoryId === 'bottom') {
         if (prev.dress) {
@@ -174,19 +172,16 @@ export function useDressup() {
           next.bottom = itemId ?? DEFAULT_BOTTOM_ID
         }
       } else if (categoryId === 'coat') {
-        // ✅ Sleeves and coats are mutually exclusive
         if (itemId !== null && prev.sleeve) {
           next.sleeve = null
         }
         next.coat = itemId
       } else if (categoryId === 'sleeve') {
-        // ✅ Sleeves can only be worn with short sleeves
         if (itemId !== null) {
           if (!hasShortSleeves(prev)) {
             console.warn('Sleeves can only be worn with short-sleeve tops/dresses')
             return prev
           }
-          // ✅ Sleeves and coats are mutually exclusive
           if (prev.coat) {
             next.coat = null
           }
@@ -207,7 +202,7 @@ export function useDressup() {
   }, [])
 
   const setColor = useCallback((categoryId: CategoryId, color: string) => {
-    setColors((prev) => ({ ...prev, [categoryId]: color }))
+    setColorsState((prev) => ({ ...prev, [categoryId]: color }))
   }, [])
 
   const getRandomColorFor = useCallback((categoryId: CategoryId) => {
@@ -217,12 +212,12 @@ export function useDressup() {
   }, [])
 
   const randomize = useCallback(() => {
-    setSelection(DEFAULT_STATE)
+    setSelectionState(DEFAULT_STATE)
   }, [])
 
   const reset = useCallback(() => {
-    setSelection(DEFAULT_STATE)
-    setColors(DEFAULT_COLORS)
+    setSelectionState(DEFAULT_STATE)
+    setColorsState(DEFAULT_COLORS)
   }, [])
 
   const getCurrentAlignment = useCallback((): AlignmentValues => {
@@ -259,33 +254,34 @@ export function useDressup() {
     })
   }, [selection, activeCategory])
 
-const setSelection = useCallback((newSelection: Partial<DressupState>) => {
-  setSelection((prev) => ({ ...prev, ...newSelection }))
-}, [])
+  // ✅ These are the NEW functions for setting entire selection/colors at once
+  const setSelection = useCallback((newSelection: Partial<DressupState>) => {
+    setSelectionState((prev) => ({ ...prev, ...newSelection }))
+  }, [])
 
-const setColors = useCallback((newColors: Partial<ColorState>) => {
-  setColors((prev) => ({ ...prev, ...newColors }))
-}, [])
+  const setColors = useCallback((newColors: Partial<ColorState>) => {
+    setColorsState((prev) => ({ ...prev, ...newColors }))
+  }, [])
 
-return {
-  selection,
-  colors,
-  activeCategory,
-  setActiveCategory,
-  selectItem,
-  setColor,
-  setSelection, // ✅ NEW
-  setColors,    // ✅ NEW
-  getRandomColorFor,
-  randomize,
-  reset,
-  alignMode,
-  setAlignMode,
-  alignments,
-  getCurrentAlignment,
-  setCurrentAlignment,
-  resetCurrentAlignment,
-}
+  return {
+    selection,
+    colors,
+    activeCategory,
+    setActiveCategory,
+    selectItem,
+    setColor,
+    setSelection, // ✅ NEW - for loading saved outfits
+    setColors,    // ✅ NEW - for loading saved outfits
+    getRandomColorFor,
+    randomize,
+    reset,
+    alignMode,
+    setAlignMode,
+    alignments,
+    getCurrentAlignment,
+    setCurrentAlignment,
+    resetCurrentAlignment,
+  }
 }
 
 export type UseDressupReturn = ReturnType<typeof useDressup>
