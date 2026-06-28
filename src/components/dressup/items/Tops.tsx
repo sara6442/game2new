@@ -34,10 +34,10 @@ export const Top10: React.FC<ClothProps> = makePngTop('/top10.png', { x: -45, y:
 export const Top11: React.FC<ClothProps> = makePngTop('/top11.png', { x: 21,  y: 30, scale: 0.86 })
 export const Top12: React.FC<ClothProps> = makePngTop('/top12.png', { x: -5,  y: 12, scale: 1.06 })
 export const Top13: React.FC<ClothProps> = makePngTop('/top13.png', { x: 24,  y: 50, scale: 0.85 })
-export const Top14: React.FC<ClothProps> = makePngTop('/top14.png', { x: 29,  y: 37, scale: 0.83 })
-export const Top15: React.FC<ClothProps> = makePngTop('/top15.png', { x: 31,  y: 52, scale: 0.8  })
+export const Top14: React.FC<ClothProps> = makePngTop('/top14.png', { x: 4,   y: 4,  scale: 0.97 })  // ✅ Updated
+export const Top15: React.FC<ClothProps> = makePngTop('/top15.png', { x: 9,   y: 11, scale: 0.93 })  // ✅ Updated
 export const Top16: React.FC<ClothProps> = makePngTop('/top16.png', { x: 0,   y: 36, scale: 1    })
-export const Top17: React.FC<ClothProps> = makePngTop('/top17.png', { x: 28,  y: 59, scale: 0.81 })
+export const Top17: React.FC<ClothProps> = makePngTop('/top17.png', { x: 15,  y: 11, scale: 0.91 })  // ✅ Updated
 export const Top18: React.FC<ClothProps> = makePngTop('/top18.png', { x: 40,  y: 59, scale: 0.75 })
 export const Top19: React.FC<ClothProps> = makePngTop('/top19.png', { x: 37,  y: 61, scale: 0.77 })
 export const Top20: React.FC<ClothProps> = makePngTop('/top20.png', { x: 25,  y: 32, scale: 0.84 })
@@ -63,10 +63,10 @@ export const TOP_ITEMS: TopItem[] = [
   { id: 'top11', name: 'White Blouse',  Component: Top11, sleeveLength: 'long',  defaultAlign: { x: 21,  y: 30,  scale: 0.86 } },
   { id: 'top12', name: 'Black Blouse',  Component: Top12, sleeveLength: 'long',  defaultAlign: { x: -5,  y: 12,  scale: 1.06 } },
   { id: 'top13', name: 'Blue Blouse',   Component: Top13, sleeveLength: 'short', defaultAlign: { x: 24,  y: 50,  scale: 0.85 } },
-  { id: 'top14', name: 'Red Denim',     Component: Top14, sleeveLength: 'long',  defaultAlign: { x: 29,  y: 37,  scale: 0.83 } },
-  { id: 'top15', name: 'Black Cut',     Component: Top15, sleeveLength: 'short', defaultAlign: { x: 31,  y: 52,  scale: 0.8  } },
+  { id: 'top14', name: 'Red Denim',     Component: Top14, sleeveLength: 'long',  defaultAlign: { x: 4,   y: 4,   scale: 0.97 } },  // ✅ Updated
+  { id: 'top15', name: 'Black Cut',     Component: Top15, sleeveLength: 'short', defaultAlign: { x: 9,   y: 11,  scale: 0.93 } },  // ✅ Updated
   { id: 'top16', name: 'Floral Top2',   Component: Top16, sleeveLength: 'long',  defaultAlign: { x: 0,   y: 36,  scale: 1    } },
-  { id: 'top17', name: 'Dotted Top',    Component: Top17, sleeveLength: 'long',  defaultAlign: { x: 28,  y: 59,  scale: 0.81 } },
+  { id: 'top17', name: 'Dotted Top',    Component: Top17, sleeveLength: 'long',  defaultAlign: { x: 15,  y: 11,  scale: 0.91 } },  // ✅ Updated
   { id: 'top18', name: 'Beige Top',     Component: Top18, sleeveLength: 'short', defaultAlign: { x: 40,  y: 59,  scale: 0.75 } },
   { id: 'top19', name: 'Floral Top3',   Component: Top19, sleeveLength: 'short', defaultAlign: { x: 37,  y: 61,  scale: 0.77 } },
   { id: 'top20', name: 'Blue Ribbon',   Component: Top20, sleeveLength: 'short', defaultAlign: { x: 25,  y: 32,  scale: 0.84 } },
