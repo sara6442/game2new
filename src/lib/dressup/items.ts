@@ -21,6 +21,7 @@ import type { BraceletProps, BraceletItem }                from '@/components/dr
 import type { HandDecoProps, HandDecoItem }                from '@/components/dressup/items/HandDec'
 import type { RingProps, RingItem }                        from '@/components/dressup/items/Rings'
 import type { NecklaceProps, NecklaceItem }                from '@/components/dressup/items/Necklaces'
+import type { BraceletProps, BraceletItem }                from '@/components/dressup/items/Bracelets'
  
 import { TOP_ITEMS }        from '@/components/dressup/items/Tops'
 import { BOTTOM_ITEMS }     from '@/components/dressup/items/Bottoms'
