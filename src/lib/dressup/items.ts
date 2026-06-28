@@ -206,7 +206,21 @@ export const ITEMS_BY_CATEGORY: Record<CategoryId, AnyItem[]> = {
   bracelet:    BRACELET_ITEMS   as unknown as AnyItem[],
   necklace:    NECKLACE_ITEMS   as unknown as AnyItem[],
 }
- 
+
+ // Maps itemId -> its baked-in defaultAlign so useDressup can seed the
+// align panel with the real starting position, not (0,0,1).
+export function getItemDefaultAlign(itemId: string): { x: number; y: number; scale: number } {
+  for (const items of Object.values(ITEMS_BY_CATEGORY)) {
+    for (const item of items) {
+      if (item.id === itemId) {
+        const a = (item as { defaultAlign?: { x: number; y: number; scale: number } }).defaultAlign
+        if (a) return a
+      }
+    }
+  }
+  return { x: 0, y: 0, scale: 1 }
+}
+
 export {
   HAIR_STYLES, TOP_ITEMS, BOTTOM_ITEMS, DRESS_ITEMS, COAT_ITEMS,
   BACKGROUND_ITEMS, SHOE_ITEMS, SLEEVE_ITEMS, DECORATION_ITEMS,
