@@ -155,8 +155,13 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
         {/* z=1: HAIR BACK */}
         {HairStyle && <HairStyle.back color={colors.hair} />}
 
-        {/* z=2: BODY */}
+         {/* z=2: BODY */}
         <Body src={bodySrc} />
+
+        {/* z=2.5: SHOES — behind everything (legs go under clothes) */}
+        {ShoeComp && (
+          <ShoeComp color={colors.shoe} align={getAlignment('shoe', selection.shoe)} />
+        )}
 
         {/* z=3: BOTTOM */}
         {!selection.dress && BottomComp && (
@@ -236,10 +241,6 @@ export function StageCanvas({ selection, colors, alignments, alignOverride }: St
           <HairAccComp align={getAlignment('hairAcc', selection.hairAcc)} />
         )}
 
-        {/* z=7: SHOES */}
-        {ShoeComp && (
-          <ShoeComp color={colors.shoe} align={getAlignment('shoe', selection.shoe)} />
-        )}
 
         {/* z=8: DRESS19 — over EVERYTHING except rolling pin and face9 */}
         {isDress19 && DressComp && (
