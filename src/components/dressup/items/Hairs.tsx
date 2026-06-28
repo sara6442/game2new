@@ -74,22 +74,23 @@ const Hair11Front = makePngHair('/hair11.png', { x: 5, y: -192, scale: 1.5 })
 export interface HairStyle {
   id: string
   name: string
-  back: ComponentType<HairProps>
-  front: ComponentType<HairProps>
+  back: React.FC<HairProps>
+  front: React.FC<HairProps>
+  defaultAlign: { x: number; y: number; scale: number }
 }
 
 export const HAIR_STYLES: HairStyle[] = [
-  { id: 'hair1',  name: 'Style 1',  back: NoopBack, front: Hair1Front },
-  { id: 'hair2',  name: 'Style 2',  back: NoopBack, front: Hair2Front },
-  { id: 'hair3',  name: 'Style 3',  back: NoopBack, front: Hair3Front },
-  { id: 'hair4',  name: 'Style 4',  back: NoopBack, front: Hair4Front },
-  { id: 'hair5',  name: 'Style 5',  back: NoopBack, front: Hair5Front },
-  { id: 'hair6',  name: 'Style 6',  back: NoopBack, front: Hair6Front },
-  { id: 'hair7',  name: 'Style 7',  back: NoopBack, front: Hair7Front },
-  { id: 'hair8',  name: 'Style 8',  back: NoopBack, front: Hair8Front },
-  { id: 'hair9',  name: 'Style 9',  back: NoopBack, front: Hair9Front },
-  { id: 'hair10', name: 'Style 10',  back: NoopBack, front: Hair10Front },
-  { id: 'hair11', name: 'Style 11',  back: NoopBack, front: Hair11Front },
+  { id: 'hair1',  name: 'Hair 1',  back: Hair1Back,  front: Hair1Front,  defaultAlign: { x: 16,  y: -90,  scale: 1.03 } },
+  { id: 'hair2',  name: 'Hair 2',  back: Hair2Back,  front: Hair2Front,  defaultAlign: { x: -16, y: -80,  scale: 1.10 } },
+  { id: 'hair3',  name: 'Hair 3',  back: Hair3Back,  front: Hair3Front,  defaultAlign: { x: -8,  y: -54,  scale: 1    } },
+  { id: 'hair4',  name: 'Hair 4',  back: Hair4Back,  front: Hair4Front,  defaultAlign: { x: -11, y: -45,  scale: 1    } },
+  { id: 'hair5',  name: 'Hair 5',  back: Hair5Back,  front: Hair5Front,  defaultAlign: { x: 9,   y: -67,  scale: 1.05 } },
+  { id: 'hair6',  name: 'Hair 6',  back: Hair6Back,  front: Hair6Front,  defaultAlign: { x: -4,  y: -61,  scale: 1.00 } },
+  { id: 'hair7',  name: 'Hair 7',  back: Hair7Back,  front: Hair7Front,  defaultAlign: { x: -43, y: -70,  scale: 1.23 } },
+  { id: 'hair8',  name: 'Hair 8',  back: Hair8Back,  front: Hair8Front,  defaultAlign: { x: -5,  y: -79,  scale: 1.10 } },
+  { id: 'hair9',  name: 'Hair 9',  back: Hair9Back,  front: Hair9Front,  defaultAlign: { x: -38, y: -68,  scale: 1.15 } },
+  { id: 'hair10', name: 'Hair 10', back: Hair10Back, front: Hair10Front, defaultAlign: { x: 22,  y: -96,  scale: 1.00 } },
+  { id: 'hair11', name: 'Hair 11', back: Hair11Back, front: Hair11Front, defaultAlign: { x: 5,   y: -192, scale: 1.5  } },
 ]
 
 export default HAIR_STYLES
