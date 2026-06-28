@@ -108,6 +108,30 @@ export function isGloveFluffy(gloveId: string | null): boolean {
     || gloveId.includes('fluffy')
 }
 
+function hasShortSleeves(state: DressupState): boolean {
+  if (state.dress) {
+    const dress = DRESS_ITEMS.find((d) => d.id === state.dress)
+    return dress?.sleeveLength === 'short'
+  }
+  if (state.top) {
+    const top = TOP_ITEMS.find((t) => t.id === state.top)
+    return top?.sleeveLength === 'short'
+  }
+  return false
+}
+
+function hasLongSleeves(state: DressupState): boolean {
+  if (state.dress) {
+    const dress = DRESS_ITEMS.find((d) => d.id === state.dress)
+    return dress?.sleeveLength === 'long'
+  }
+  if (state.top) {
+    const top = TOP_ITEMS.find((t) => t.id === state.top)
+    return top?.sleeveLength === 'long'
+  }
+  return false
+}
+
 export function useDressup() {
   const [selection, setSelection] = useState<DressupState>(DEFAULT_STATE)
   const [colors, setColors]       = useState<ColorState>(DEFAULT_COLORS)
@@ -124,6 +148,8 @@ export function useDressup() {
           next.dress  = itemId
           next.top    = null
           next.bottom = null
+          // Clear sleeves when dress changes
+          next.sleeve = null
         } else {
           next.dress  = null
           next.top    = DEFAULT_TOP_ID
@@ -137,6 +163,8 @@ export function useDressup() {
         } else {
           next.top = itemId ?? DEFAULT_TOP_ID
         }
+        // Clear sleeves when top changes
+        next.sleeve = null
       } else if (categoryId === 'bottom') {
         if (prev.dress) {
           next.dress  = null
@@ -146,7 +174,24 @@ export function useDressup() {
           next.bottom = itemId ?? DEFAULT_BOTTOM_ID
         }
       } else if (categoryId === 'coat') {
+        // ✅ Sleeves and coats are mutually exclusive
+        if (itemId !== null && prev.sleeve) {
+          next.sleeve = null
+        }
         next.coat = itemId
+      } else if (categoryId === 'sleeve') {
+        // ✅ Sleeves can only be worn with short sleeves
+        if (itemId !== null) {
+          if (!hasShortSleeves(prev)) {
+            console.warn('Sleeves can only be worn with short-sleeve tops/dresses')
+            return prev
+          }
+          // ✅ Sleeves and coats are mutually exclusive
+          if (prev.coat) {
+            next.coat = null
+          }
+        }
+        next.sleeve = itemId
       } else if (categoryId === 'hat') {
         next.hat     = itemId
         next.hairAcc = null
