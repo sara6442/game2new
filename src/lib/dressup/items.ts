@@ -22,7 +22,7 @@ import type { HandDecoProps, HandDecoItem }                from '@/components/dr
 import type { RingProps, RingItem }                        from '@/components/dressup/items/Rings'
 import type { NecklaceProps, NecklaceItem }                from '@/components/dressup/items/Necklaces'
 import type { BraceletProps, BraceletItem }                from '@/components/dressup/items/Bracelets'
- 
+
 import { TOP_ITEMS }        from '@/components/dressup/items/Tops'
 import { BOTTOM_ITEMS }     from '@/components/dressup/items/Bottoms'
 import { DRESS_ITEMS }      from '@/components/dressup/items/Dresses'
