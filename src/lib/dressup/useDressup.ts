@@ -259,23 +259,33 @@ export function useDressup() {
     })
   }, [selection, activeCategory])
 
-  return {
-    selection,
-    colors,
-    activeCategory,
-    setActiveCategory,
-    selectItem,
-    setColor,
-    getRandomColorFor,
-    randomize,
-    reset,
-    alignMode,
-    setAlignMode,
-    alignments,
-    getCurrentAlignment,
-    setCurrentAlignment,
-    resetCurrentAlignment,
-  }
+const setSelection = useCallback((newSelection: Partial<DressupState>) => {
+  setSelection((prev) => ({ ...prev, ...newSelection }))
+}, [])
+
+const setColors = useCallback((newColors: Partial<ColorState>) => {
+  setColors((prev) => ({ ...prev, ...newColors }))
+}, [])
+
+return {
+  selection,
+  colors,
+  activeCategory,
+  setActiveCategory,
+  selectItem,
+  setColor,
+  setSelection, // ✅ NEW
+  setColors,    // ✅ NEW
+  getRandomColorFor,
+  randomize,
+  reset,
+  alignMode,
+  setAlignMode,
+  alignments,
+  getCurrentAlignment,
+  setCurrentAlignment,
+  resetCurrentAlignment,
+}
 }
 
 export type UseDressupReturn = ReturnType<typeof useDressup>
