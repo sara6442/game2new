@@ -100,7 +100,6 @@ const DEFAULT_STATE: DressupState = {
   sleeve:      null,
 }
 
-/** Returns true if the selected glove is fluffy (renders above long sleeves) */
 export function isGloveFluffy(gloveId: string | null): boolean {
   if (!gloveId) return false
   const glove = GLOVE_ITEMS.find((g) => g.id === gloveId)
@@ -183,8 +182,6 @@ export function useDressup() {
   const getCurrentAlignment = useCallback((): AlignmentValues => {
     const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
     if (!selectedId) return { x: 0, y: 0, scale: 1 }
-    // Use saved alignment override if exists, otherwise fall back to the item's
-    // own baked-in defaultAlign so the panel shows the real starting position.
     return alignments[selectedId] ?? getItemDefaultAlign(selectedId)
   }, [selection, activeCategory, alignments])
 
@@ -194,12 +191,12 @@ export function useDressup() {
       if (!selectedId) return
       setAlignments((prev) => {
         const current = prev[selectedId]
-        if (current &&
-            current.x === values.x &&
-            current.y === values.y &&
-            current.scale === values.scale) {
-          return prev
-        }
+        if (
+          current &&
+          current.x     === values.x &&
+          current.y     === values.y &&
+          current.scale === values.scale
+        ) return prev
         return { ...prev, [selectedId]: values }
       })
     },
