@@ -41,7 +41,7 @@ function makePngSleeve(src: string, defaultAlign: SleeveAlignment = { x: 0, y: 0
 }
 
 // ── Sleeves with custom alignments ──────────────────────────────────────────
-export const Sleeve1: React.FC<SleeveProps> = makePngSleeve('/sleeve1.png', { x: 0, y: 0, scale: 1 })
+export const Sleeve1: React.FC<SleeveProps> = makePngSleeve('/sleeves1.png', { x: 0, y: 0, scale: 1 })
 
 export const SLEEVE_ITEMS: SleeveItem[] = [
   { id: 'sleeve1', name: 'Black Sleeves', Component: Sleeve1 },
