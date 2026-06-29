@@ -133,11 +133,11 @@ function hasLongSleeves(state: DressupState): boolean {
 }
 
 export function useDressup() {
-  const [selection, setSelectionState] = useState<DressupState>(DEFAULT_STATE)  // ✅ Renamed
-  const [colors, setColorsState] = useState<ColorState>(DEFAULT_COLORS)          // ✅ Renamed
+  const [selection, setSelectionState] = useState<DressupState>(DEFAULT_STATE)
+  const [colors, setColorsState] = useState<ColorState>(DEFAULT_COLORS)
   const [activeCategory, setActiveCategory] = useState<CategoryId>('background')
   const [alignMode, setAlignMode] = useState(false)
-  const [alignments, setAlignments] = useState<Record<string, AlignmentValues>>({})
+  const [alignments, setAlignmentsState] = useState<Record<string, AlignmentValues>>({})
 
   const selectItem = useCallback((categoryId: CategoryId, itemId: string | null) => {
     setSelectionState((prev) => {
@@ -230,7 +230,7 @@ export function useDressup() {
     (values: AlignmentValues) => {
       const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
       if (!selectedId) return
-      setAlignments((prev) => {
+      setAlignmentsState((prev) => {
         const current = prev[selectedId]
         if (
           current &&
@@ -247,20 +247,23 @@ export function useDressup() {
   const resetCurrentAlignment = useCallback(() => {
     const selectedId = (selection as unknown as Record<string, string | null>)[activeCategory]
     if (!selectedId) return
-    setAlignments((prev) => {
+    setAlignmentsState((prev) => {
       const next = { ...prev }
       delete next[selectedId]
       return next
     })
   }, [selection, activeCategory])
 
-  // ✅ These are the NEW functions for setting entire selection/colors at once
   const setSelection = useCallback((newSelection: Partial<DressupState>) => {
     setSelectionState((prev) => ({ ...prev, ...newSelection }))
   }, [])
 
   const setColors = useCallback((newColors: Partial<ColorState>) => {
     setColorsState((prev) => ({ ...prev, ...newColors }))
+  }, [])
+
+  const setAlignments = useCallback((newAlignments: Record<string, AlignmentValues>) => {
+    setAlignmentsState(newAlignments)
   }, [])
 
   return {
@@ -270,8 +273,9 @@ export function useDressup() {
     setActiveCategory,
     selectItem,
     setColor,
-    setSelection, // ✅ NEW - for loading saved outfits
-    setColors,    // ✅ NEW - for loading saved outfits
+    setSelection,
+    setColors,
+    setAlignments,
     getRandomColorFor,
     randomize,
     reset,
