@@ -4,7 +4,7 @@
  * DressupGame.tsx — Main game page with tabs, outfit saving, and randomize.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDressup } from '@/lib/dressup/useDressup'
 import { StageCanvas } from './StageCanvas'
 import { Sidebar } from './Sidebar'
@@ -37,13 +37,35 @@ interface SavedOutfit {
   timestamp: number
 }
 
+interface TabData {
+  id: string
+  name: string
+  selection: any
+  colors: any
+  alignments: Record<string, any>
+}
+
 export function DressupGame() {
   const game = useDressup()
   const [outfitName, setOutfitName] = useState('')
   const [savedOutfits, setSavedOutfits] = useState<SavedOutfit[]>([])
   const [selectedOutfitId, setSelectedOutfitId] = useState<string | null>(null)
-  const [tabs, setTabs] = useState<string[]>(['main'])
-  const [activeTab, setActiveTab] = useState('main')
+  const [tabs, setTabs] = useState<TabData[]>([
+    { 
+      id: 'tab-1', 
+      name: 'Main', 
+      selection: { ...game.selection }, 
+      colors: { ...game.colors },
+      alignments: { ...game.alignments }
+    }
+  ])
+  const [activeTabId, setActiveTabId] = useState('tab-1')
+  const [editingTabId, setEditingTabId] = useState<string | null>(null)
+  const [editingTabName, setEditingTabName] = useState('')
+  const [editingOutfitId, setEditingOutfitId] = useState<string | null>(null)
+  const [editingOutfitName, setEditingOutfitName] = useState('')
+  const tabInputRef = useRef<HTMLInputElement>(null)
+  const outfitInputRef = useRef<HTMLInputElement>(null)
 
   // Load saved outfits from localStorage on mount
   useEffect(() => {
@@ -62,9 +84,56 @@ export function DressupGame() {
     localStorage.setItem('dressup-saved-outfits', JSON.stringify(savedOutfits))
   }, [savedOutfits])
 
-  const alignOverride = game.alignMode
-    ? { category: game.activeCategory, values: game.getCurrentAlignment() }
-    : null
+  // Load tabs from localStorage
+  useEffect(() => {
+    const savedTabs = localStorage.getItem('dressup-tabs')
+    if (savedTabs) {
+      try {
+        const parsed = JSON.parse(savedTabs)
+        if (parsed.length > 0) {
+          setTabs(parsed)
+          setActiveTabId(parsed[0].id)
+        }
+      } catch (e) {
+        console.error('Failed to load tabs:', e)
+      }
+    }
+  }, [])
+
+  // Save tabs to localStorage
+  useEffect(() => {
+    localStorage.setItem('dressup-tabs', JSON.stringify(tabs))
+  }, [tabs])
+
+  // ── Save current tab state ──────────────────────────────────────────────
+  const saveCurrentTab = () => {
+    setTabs(prev => prev.map(tab => 
+      tab.id === activeTabId 
+        ? { 
+            ...tab, 
+            selection: { ...game.selection }, 
+            colors: { ...game.colors },
+            alignments: { ...game.alignments }
+          }
+        : tab
+    ))
+  }
+
+  // ── Load tab state ──────────────────────────────────────────────────────
+  const loadTab = (tabId: string) => {
+    // Save current tab first
+    saveCurrentTab()
+    
+    const tab = tabs.find(t => t.id === tabId)
+    if (tab) {
+      game.setSelection(tab.selection)
+      game.setColors(tab.colors)
+      if (tab.alignments) {
+        game.setAlignments(tab.alignments)
+      }
+      setActiveTabId(tabId)
+    }
+  }
 
   // ── Randomize ──────────────────────────────────────────────────────────────
   const handleRandomize = () => {
@@ -73,7 +142,6 @@ export function DressupGame() {
       return items[Math.floor(Math.random() * items.length)].id
     }
 
-    // Randomly decide if wearing dress or top+bottom
     const wearDress = Math.random() > 0.5
 
     const randomSelection = {
@@ -98,6 +166,8 @@ export function DressupGame() {
     }
 
     game.setSelection(randomSelection)
+    // Auto-save after randomize
+    setTimeout(saveCurrentTab, 100)
   }
 
   // ── Save Outfit ────────────────────────────────────────────────────────────
@@ -125,6 +195,8 @@ export function DressupGame() {
     game.setSelection(outfit.selection)
     game.setColors(outfit.colors)
     setSelectedOutfitId(outfit.id)
+    // Auto-save after loading
+    setTimeout(saveCurrentTab, 100)
   }
 
   // ── Delete Outfit ──────────────────────────────────────────────────────────
@@ -135,23 +207,77 @@ export function DressupGame() {
     }
   }
 
+  // ── Rename Outfit ──────────────────────────────────────────────────────────
+  const startRenameOutfit = (outfit: SavedOutfit) => {
+    setEditingOutfitId(outfit.id)
+    setEditingOutfitName(outfit.name)
+    setTimeout(() => outfitInputRef.current?.focus(), 0)
+  }
+
+  const finishRenameOutfit = () => {
+    if (editingOutfitId && editingOutfitName.trim()) {
+      setSavedOutfits(prev => prev.map(o => 
+        o.id === editingOutfitId 
+          ? { ...o, name: editingOutfitName.trim() }
+          : o
+      ))
+    }
+    setEditingOutfitId(null)
+    setEditingOutfitName('')
+  }
+
   // ── Tabs ────────────────────────────────────────────────────────────────────
   const addTab = () => {
-    const newTabId = `tab-${Date.now()}`
-    setTabs([...tabs, newTabId])
-    setActiveTab(newTabId)
-    // Reset the game for new tab
-    game.reset()
+    const newTab: TabData = {
+      id: `tab-${Date.now()}`,
+      name: `Tab ${tabs.length + 1}`,
+      selection: { ...game.selection },
+      colors: { ...game.colors },
+      alignments: { ...game.alignments }
+    }
+    setTabs([...tabs, newTab])
+    setActiveTabId(newTab.id)
   }
 
   const removeTab = (tabId: string) => {
     if (tabs.length <= 1) return
-    const newTabs = tabs.filter(t => t !== tabId)
+    saveCurrentTab()
+    const newTabs = tabs.filter(t => t.id !== tabId)
     setTabs(newTabs)
-    if (activeTab === tabId) {
-      setActiveTab(newTabs[newTabs.length - 1])
+    if (activeTabId === tabId) {
+      const newActive = newTabs[newTabs.length - 1]
+      setActiveTabId(newActive.id)
+      loadTab(newActive.id)
     }
   }
+
+  const startRenameTab = (tab: TabData) => {
+    setEditingTabId(tab.id)
+    setEditingTabName(tab.name)
+    setTimeout(() => tabInputRef.current?.focus(), 0)
+  }
+
+  const finishRenameTab = () => {
+    if (editingTabId && editingTabName.trim()) {
+      setTabs(prev => prev.map(t => 
+        t.id === editingTabId 
+          ? { ...t, name: editingTabName.trim() }
+          : t
+      ))
+    }
+    setEditingTabId(null)
+    setEditingTabName('')
+  }
+
+  // ── Auto-save on selection change ────────────────────────────────────────
+  useEffect(() => {
+    const timer = setTimeout(saveCurrentTab, 500)
+    return () => clearTimeout(timer)
+  }, [game.selection, game.colors])
+
+  const alignOverride = game.alignMode
+    ? { category: game.activeCategory, values: game.getCurrentAlignment() }
+    : null
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-b from-stone-100 via-amber-50/40 to-stone-100">
@@ -159,34 +285,57 @@ export function DressupGame() {
       <header className="flex shrink-0 flex-col border-b border-stone-300/60 bg-stone-50/90 backdrop-blur">
         {/* Tab bar */}
         <div className="flex items-center gap-1 px-2 pt-2 overflow-x-auto">
-          {tabs.map((tabId) => (
-            <div
-              key={tabId}
-              className={`flex items-center gap-1 rounded-t-md px-3 py-1.5 text-sm font-medium transition-all ${
-                activeTab === tabId
-                  ? 'bg-white text-stone-800 shadow-sm'
-                  : 'bg-stone-100/80 text-stone-500 hover:bg-stone-200'
-              }`}
-            >
-              <button
-                onClick={() => setActiveTab(tabId)}
-                className="max-w-[120px] truncate"
+          {tabs.map((tab) => {
+            const isEditing = editingTabId === tab.id
+            return (
+              <div
+                key={tab.id}
+                className={`flex items-center gap-1 rounded-t-md px-3 py-1.5 text-sm font-medium transition-all min-w-[100px] ${
+                  activeTabId === tab.id
+                    ? 'bg-white text-stone-800 shadow-sm'
+                    : 'bg-stone-100/80 text-stone-500 hover:bg-stone-200'
+                }`}
               >
-                {tabId === 'main' ? 'Main' : `Tab ${tabs.indexOf(tabId)}`}
-              </button>
-              {tabs.length > 1 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    removeTab(tabId)
-                  }}
-                  className="ml-1 rounded-full p-0.5 hover:bg-stone-300/50 text-stone-400 hover:text-stone-700"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          ))}
+                {isEditing ? (
+                  <input
+                    ref={tabInputRef}
+                    type="text"
+                    value={editingTabName}
+                    onChange={(e) => setEditingTabName(e.target.value)}
+                    onBlur={finishRenameTab}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') finishRenameTab()
+                      if (e.key === 'Escape') {
+                        setEditingTabId(null)
+                        setEditingTabName('')
+                      }
+                    }}
+                    className="bg-transparent outline-none min-w-[60px] max-w-[150px]"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    onClick={() => loadTab(tab.id)}
+                    className="truncate max-w-[150px]"
+                    onDoubleClick={() => startRenameTab(tab)}
+                  >
+                    {tab.name}
+                  </button>
+                )}
+                {tabs.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      removeTab(tab.id)
+                    }}
+                    className="ml-1 rounded-full p-0.5 hover:bg-stone-300/50 text-stone-400 hover:text-stone-700"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            )
+          })}
           <button
             onClick={addTab}
             className="flex items-center justify-center rounded-md px-2 py-1 text-sm text-stone-500 hover:bg-stone-200"
@@ -250,28 +399,61 @@ export function DressupGame() {
               <p className="text-center text-xs text-stone-400 py-4">No saved outfits yet</p>
             ) : (
               <div className="space-y-1.5">
-                {savedOutfits.map((outfit) => (
-                  <div
-                    key={outfit.id}
-                    className={`group flex items-center gap-1 rounded-md p-1.5 text-sm transition-all cursor-pointer ${
-                      selectedOutfitId === outfit.id
-                        ? 'bg-stone-200 ring-1 ring-stone-400'
-                        : 'hover:bg-stone-100'
-                    }`}
-                    onClick={() => handleLoadOutfit(outfit)}
-                  >
-                    <span className="flex-1 truncate text-xs font-medium">{outfit.name}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDeleteOutfit(outfit.id)
-                      }}
-                      className="rounded p-0.5 text-stone-400 opacity-0 transition-opacity hover:bg-stone-300 hover:text-stone-700 group-hover:opacity-100"
+                {savedOutfits.map((outfit) => {
+                  const isEditing = editingOutfitId === outfit.id
+                  return (
+                    <div
+                      key={outfit.id}
+                      className={`group flex items-center gap-1 rounded-md p-1.5 text-sm transition-all cursor-pointer ${
+                        selectedOutfitId === outfit.id
+                          ? 'bg-stone-200 ring-1 ring-stone-400'
+                          : 'hover:bg-stone-100'
+                      }`}
+                      onClick={() => !isEditing && handleLoadOutfit(outfit)}
                     >
-                      ✕
-                    </button>
-                  </div>
-                ))}
+                      {isEditing ? (
+                        <input
+                          ref={outfitInputRef}
+                          type="text"
+                          value={editingOutfitName}
+                          onChange={(e) => setEditingOutfitName(e.target.value)}
+                          onBlur={finishRenameOutfit}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') finishRenameOutfit()
+                            if (e.key === 'Escape') {
+                              setEditingOutfitId(null)
+                              setEditingOutfitName('')
+                            }
+                          }}
+                          className="flex-1 bg-transparent outline-none text-xs font-medium"
+                          autoFocus
+                        />
+                      ) : (
+                        <span className="flex-1 truncate text-xs font-medium">{outfit.name}</span>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (!isEditing) startRenameOutfit(outfit)
+                        }}
+                        className="rounded p-0.5 text-stone-400 opacity-0 transition-opacity hover:bg-stone-300 hover:text-stone-700 group-hover:opacity-100"
+                        title="Rename"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteOutfit(outfit.id)
+                        }}
+                        className="rounded p-0.5 text-stone-400 opacity-0 transition-opacity hover:bg-stone-300 hover:text-stone-700 group-hover:opacity-100"
+                        title="Delete"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -342,6 +524,8 @@ export function DressupGame() {
         <span>Choose a category, pick a color, then select an item to wear.</span>
         <span className="hidden text-stone-400 sm:inline">·</span>
         <span className="hidden sm:inline italic">Dresses replace tops &amp; bottoms automatically.</span>
+        <span className="hidden sm:inline">·</span>
+        <span className="hidden sm:inline italic">Double-click tab names to rename them</span>
       </footer>
     </div>
   )
